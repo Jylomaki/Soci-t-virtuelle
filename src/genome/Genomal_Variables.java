@@ -16,7 +16,12 @@ public class Genomal_Variables extends Randomized implements Mutable {
 		return false;
 	}
 
-
+	
+	/**
+	 * 
+	 * @param id
+	 * @param evaluate
+	 */
 	public void set(Integer id, int evaluate) {
 		vars.set(id,evaluate);
 	}

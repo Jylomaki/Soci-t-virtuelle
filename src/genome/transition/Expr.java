@@ -1,5 +1,7 @@
 package genome.transition;
 
+import java.util.Random;
+
 import terrain.Terrain_Value;
 import agent.Agent_Value;
 import agent.Human;
@@ -14,8 +16,9 @@ public class Expr extends Randomized implements Mutable{
 		OP_DIV,
 		VALUE_INTEGER,
 		VALUE_AGENT,
-		VALUE_TERRAIN
+		VALUE_TERRAIN,
 	}
+	
 	Type type;
 	Expr expr1, expr2;
 	Agent_Value agent_Value;
@@ -52,6 +55,8 @@ public class Expr extends Randomized implements Mutable{
 	@Override
 	public boolean mutate(int treshold, int maxR) {
 		// TODO Auto-generated method stub
+		if(random.nextInt(maxR)> treshold){
+		}
 		return false;
 	}
 
