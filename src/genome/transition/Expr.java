@@ -55,8 +55,12 @@ public class Expr extends Randomized implements Mutable{
 	@Override
 	public boolean mutate(int treshold, int maxR) {
 		// TODO Auto-generated method stub
-		if(random.nextInt(maxR)> treshold){
+		if(random.nextInt(maxR) < treshold){
+			//change type
 		}
+		//mutate cond1/expr1
+		//mutate cond2/expr2
+		
 		return false;
 	}
 

@@ -1,14 +1,21 @@
 package agent;
 
-import genome.Behaviour_Automata;
-import genome.Genomal_Variables;
+import genome.*;
 
 import java.util.ArrayList;
 
 public class Human {
 	public Behaviour_Automata behaviour_automata;
+	public Communication_Automata communication_automata;
 	public Genomal_Variables genomalVariables;
 	
-	void take_action(){
+	public int id, group_id;
+	public int energy, age, food, ressource;
+	public Sex sex;
+	public int culture;
+	public ArrayList<Integer> liked_list;
+	
+	public void take_action(){
+		//TODO
 	}
 }
