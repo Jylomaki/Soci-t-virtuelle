@@ -6,7 +6,7 @@ import global.Randomized;
 import java.util.ArrayList;
 
 public class Genomal_Variables extends Randomized implements Mutable {
-	public int maxVar;
+	public int maxVar=64;
 	ArrayList<Integer> vars;
 	
 	
