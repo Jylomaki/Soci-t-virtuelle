@@ -34,7 +34,7 @@ public class Cond extends Randomized implements Mutable{
 		this.generate_Adequate();
 	}
 	
-	boolean evaluate(Human agent){
+	public boolean evaluate(Human agent){
 		switch(type){
 		case NOT:
 			return !(cond1.evaluate(agent));

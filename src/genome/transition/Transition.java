@@ -4,10 +4,10 @@ import global.Mutable;
 import global.Randomized;
 
 public class Transition extends Randomized implements Mutable{
-	int starting_state;
-	int ending_state;
-	Cond cond;
-	Modification modifications;
+	public int starting_state;
+	public int ending_state;
+	public Cond cond;
+	public Modification modifications;
 	
 	private boolean has_mutated;
 	
