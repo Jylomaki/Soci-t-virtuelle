@@ -15,6 +15,8 @@ public class Human {
 	public int culture;
 	public ArrayList<Integer> liked_list;
 	
+	public int x,y;
+	
 	public void take_action(){
 		//TODO
 	}
