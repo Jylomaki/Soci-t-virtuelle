@@ -23,13 +23,13 @@ public class Case {
 		Random random = new Random();
 		int rand = random.nextInt(100);
 		if(rand<=percentageFood){
-			color = Color.green;
+			color = new Color(0,100,0);
 			type = Type.FOOD;
 		}else if(rand<=percentageFood+percentageRessource){
-			color = Color.blue;
+			color = new Color(0,0,100);
 			type = Type.RESSOURCE;
 		}else if(rand<=+percentageFood+percentageRessource+percentageFR){
-			color = Color.yellow;
+			color = new Color(0,100,100);
 			type = Type.FR;
 		}else{
 			color = Color.black;

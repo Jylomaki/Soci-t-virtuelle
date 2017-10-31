@@ -11,6 +11,7 @@ public class main {
 	    		MainWindow mainWindow = new MainWindow();
 	        }
 	    });
+		
 	}
 
 }

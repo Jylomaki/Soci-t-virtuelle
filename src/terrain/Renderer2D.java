@@ -7,6 +7,8 @@ import java.awt.RenderingHints;
 
 import javax.swing.JComponent;
 
+import data.DataManagement;
+
 public class Renderer2D extends JComponent{
 
 	private Graphics2D g2d;
@@ -26,7 +28,7 @@ public class Renderer2D extends JComponent{
 	}
 	
 	public void paintComponent(Graphics g) {
-
+		
 		g2d = (Graphics2D)g;
 		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_ON);
 		cleanUp();
@@ -44,9 +46,12 @@ public class Renderer2D extends JComponent{
 
 		
 		/*Human Rendering*/
-		for(int i=0;i<0/*Humans.size*/;i++){
-			/*g2d.setColor(Humans.get(i).getColor());
-			g2d.drawOval(Humans.get(i).x * caseWidth,Humans.get(i).y * caseHeight, caseWidth, caseHeight);*/
+		for(int i=0;i<DataManagement.tribes.size();i++){
+			g2d.setColor(DataManagement.tribes.get(i).getColor());
+			for(int j=0;j<DataManagement.tribes.get(i).getBack_up_humans().size();j++){
+			
+				g2d.fillOval(DataManagement.tribes.get(i).getBack_up_humans().get(j).x * caseWidth,DataManagement.tribes.get(i).getBack_up_humans().get(j).y * caseHeight, caseWidth, caseHeight);
+			}
 		}	
 
 		
