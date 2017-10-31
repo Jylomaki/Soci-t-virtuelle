@@ -4,9 +4,10 @@ import genome.*;
 import global.Randomized;
 import global.Vector;
 
-import java.awt.Point;
 import java.util.ArrayList;
 
+import action.Collect_Food;
+import action.ParentAction;
 import data.DataManagement;
 
 public class Human extends Randomized{
@@ -27,13 +28,21 @@ public class Human extends Randomized{
 	public int x,y;
 	public Vector dir;
 	
+	ParentAction currentAction;
+	
 	public Human(){
 		dir = new Vector(100,100);
 		id = id_count++;
 	}
 	
 	public void take_action(){
-		//TODO
+		//TODO maybe switch over Action enum and set current Action
+		currentAction = new Collect_Food();
+	}
+	
+	public void executeAction(){
+		take_action();
+		currentAction.execute(this);
 	}
 	
 	//Reflexes actions and update Attribute
@@ -52,9 +61,9 @@ public class Human extends Randomized{
 		x = (int) ((x+(dir.x/100))%DataManagement.TerrainGridX);
 		y = (int) ((y+(dir.y/100))%DataManagement.TerrainGridY);
 		if(x<0)
-			x = DataManagement.TerrainGridX;
+			x = DataManagement.TerrainGridX-1;
 		if(y<0)
-			y = DataManagement.TerrainGridY;
+			y = DataManagement.TerrainGridY-1;
 	}
 	
 	public void wiggle(){

@@ -6,7 +6,7 @@ import global.Randomized;
 
 import java.util.ArrayList;
 
-import agent.Action;
+import action.Action;
 import agent.Human;
 
 public class Behaviour_Automata extends Randomized implements Mutable {

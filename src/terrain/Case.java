@@ -5,7 +5,7 @@ import java.util.Random;
 
 public class Case {
 
-	enum Type{
+	public enum TypeCase{
 		EMPTY,
 		FOOD,
 		RESSOURCE,
@@ -13,7 +13,7 @@ public class Case {
 	};
 	
 	private Color color;
-	private Type type;
+	private TypeCase type;
 	
 	static final int percentageFood = 5;
 	static final int percentageRessource = 5;
@@ -24,16 +24,16 @@ public class Case {
 		int rand = random.nextInt(100);
 		if(rand<=percentageFood){
 			color = new Color(0,100,0);
-			type = Type.FOOD;
+			type = TypeCase.FOOD;
 		}else if(rand<=percentageFood+percentageRessource){
 			color = new Color(0,0,100);
-			type = Type.RESSOURCE;
+			type = TypeCase.RESSOURCE;
 		}else if(rand<=+percentageFood+percentageRessource+percentageFR){
 			color = new Color(0,100,100);
-			type = Type.FR;
+			type = TypeCase.FR;
 		}else{
 			color = Color.black;
-			type = Type.EMPTY;
+			type = TypeCase.EMPTY;
 		}
 	}
 
@@ -45,12 +45,26 @@ public class Case {
 		this.color = color;
 	}
 
-	public Type getType() {
+	public TypeCase getType() {
 		return type;
 	}
 
-	public void setType(Type type) {
+	public void setType(TypeCase type) {
 		this.type = type;
+		switch(type){
+			case FOOD:
+				color = new Color(0,100,0);
+			break;
+			case RESSOURCE:
+				color = new Color(0,0,100);
+			break;
+			case FR:
+				color = new Color(0,100,100);
+			break;
+			case EMPTY:
+				color = Color.black;
+			break;
+		}
 	}
 	
 	

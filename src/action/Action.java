@@ -1,4 +1,4 @@
-package agent;
+package action;
 
 public enum Action {
 	COLLECT_FOOD,
@@ -6,3 +6,4 @@ public enum Action {
 	SETTLEMENT,
 	MOVE
 }
+

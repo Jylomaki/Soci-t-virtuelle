@@ -30,9 +30,8 @@ public class MainWindow extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setLayout(new BorderLayout());
 		
-		Terrain terrain = new Terrain();
 		
-		renderer = new Renderer2D(HEIGHT,HEIGHT,terrain);
+		renderer = new Renderer2D(HEIGHT,HEIGHT,DataManagement.terrain);
 		
 		JPanel panelControler = new JPanel();
 		panelControler.setLayout(new BoxLayout(panelControler,BoxLayout.Y_AXIS));
@@ -88,7 +87,11 @@ public class MainWindow extends JFrame {
 				tribe.getBack_up_humans().get(i).update();
 			}
 		}
-		
+		for(Tribe tribe:DataManagement.tribes){
+			for(int i=tribe.getBack_up_humans().size()-1;i>=0;i--){
+				tribe.getBack_up_humans().get(i).executeAction();
+			}
+		}
 		renderer.repaint();
 
 	}
