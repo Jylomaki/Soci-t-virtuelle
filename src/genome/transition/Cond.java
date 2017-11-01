@@ -23,7 +23,7 @@ public class Cond extends Randomized implements Mutable{
 		IS_FIRST,
 		LIKE
 	}
-	//TODO extends so it can handle communication or non-communication as in ignoring
+	
 	private enum Meta_Type{
 		BOOL2,
 		BOOL1,
@@ -32,15 +32,23 @@ public class Cond extends Randomized implements Mutable{
 	}
 	
 	Type type;
+	Com_Type com_Type;
 	Cond cond1,cond2;
 	Expr expr1,expr2;
 	private boolean has_mutated;
-	private static int type_count= 5;
+	private boolean handle_communication;
 	
 	
 	public Cond(){
 		type = this.next_Type();
 		this.generate_Adequate();
+	}
+	
+	public Cond(boolean communication) {
+		this.handle_communication = communication;
+		type = this.next_Type();
+		this.generate_Adequate();
+			
 	}
 	
 	public boolean evaluate(Human agent){
@@ -59,6 +67,23 @@ public class Cond extends Randomized implements Mutable{
 			return false;
 		case TRUE:
 			return true;
+			//TODO ADD COMMUNICATION COND
+		case COMMUNICATION:
+			switch(this.com_Type) {
+			case HAS_BEEN_HURT:
+				return agent.comStatus == agent.comStatus.HURTED;
+			case HAS_RECEIVED_FOOD:
+				return agent.comStatus == agent.comStatus.GIVEN_FOOD;
+			case HAS_RECEIVED_RESSOURCE:
+				return agent.comStatus == agent.comStatus.GIVEN_RESSOURCE;
+			case IS_FIRST:
+				return agent.comStatus == agent.comStatus.BEGIN;
+			case LIKE:
+				return agent.does_like_interlocutor();
+			default:
+				break;
+			
+			}
 		default:
 			break;
 		}
@@ -91,13 +116,15 @@ public class Cond extends Randomized implements Mutable{
 	}
 	
 	private Type next_Type(){
-		return Type.values()[random.nextInt(type_count)];
+		if(this.handle_communication)
+			return Type.values()[random.nextInt(Type.values().length)];
+		return Type.values()[random.nextInt(Type.values().length)-1];
 	}
 	
-	private Type next_Type(Type t){
-		Type next = Type.values()[random.nextInt(type_count)];
+	private Type next_Type(Type t) {
+		Type next = next_Type();
 		while(next == t)
-			next = Type.values()[random.nextInt(type_count)];
+			next = next_Type();
 		return next;
 	}
 	
@@ -108,6 +135,7 @@ public class Cond extends Randomized implements Mutable{
 			return Meta_Type.CMP;
 		case TRUE:
 		case FALSE:
+		case COMMUNICATION: //simple check on communication state
 			return Meta_Type.BOOL0;
 		case NOT:
 			return Meta_Type.BOOL1;
@@ -117,28 +145,32 @@ public class Cond extends Randomized implements Mutable{
 	}
 	
 	private void generate_Adequate(){
-		switch( meta_Type(type)){
-		case BOOL1:
-			if(cond1 == null);
-				cond1 = new Cond();
-			break;
-		case BOOL2:
-			if(cond1 == null);
-				cond1 = new Cond();
-			if(cond2 == null);
-				cond2 = new Cond();
-			break;
-		case CMP:
-			if(expr1 == null);
-				expr1 = new Expr();
-			if(expr2 == null);
-				expr2 = new Expr();
-			break;
-		case BOOL0:
-			break;
-		default:
-			break;
+		if(type == Type.COMMUNICATION)
+			this.com_Type = Com_Type.values()[random.nextInt(Com_Type.values().length)];
+		else {
+			switch( meta_Type(type)){
+			case BOOL1:
+				if(cond1 == null);
+					cond1 = new Cond();
+				break;
+			case BOOL2:
+				if(cond1 == null);
+					cond1 = new Cond();
+				if(cond2 == null);
+					cond2 = new Cond();
+				break;
+			case CMP:
+				if(expr1 == null);
+					expr1 = new Expr();
+				if(expr2 == null);
+					expr2 = new Expr();
+				break;
+			case BOOL0:
+				break;
+			default:
+				break;
 			
+			}
 		}
 	}
 }

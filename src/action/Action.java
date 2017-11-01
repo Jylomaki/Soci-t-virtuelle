@@ -1,6 +1,7 @@
-package agent;
-@Deprecated
-class Action{
+package action;
+
+
+public class Action{
 	public enum Type{
 		//solo actions
 		COLLECT_FOOD,
@@ -15,6 +16,6 @@ class Action{
 	}
 	
 	public Type type;
-	public static int solo_action_max =4;
+	public static int solo_action_max = 4;
 	public static int all_action_max = 8;
 }
