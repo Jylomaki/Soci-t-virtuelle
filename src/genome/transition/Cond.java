@@ -12,9 +12,18 @@ public class Cond extends Randomized implements Mutable{
 		LOWER_OR_EQ,
 		HIGHER,
 		TRUE,
-		FALSE
+		FALSE,
+		COMMUNICATION
 	}
 	
+	private enum Com_Type{
+		HAS_BEEN_HURT,
+		HAS_RECEIVED_FOOD,
+		HAS_RECEIVED_RESSOURCE,
+		IS_FIRST,
+		LIKE
+	}
+	//TODO extends so it can handle communication or non-communication as in ignoring
 	private enum Meta_Type{
 		BOOL2,
 		BOOL1,

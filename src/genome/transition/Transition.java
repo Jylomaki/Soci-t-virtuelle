@@ -8,11 +8,11 @@ public class Transition extends Randomized implements Mutable{
 	public int ending_state;
 	public Cond cond;
 	public Modification modifications;
-	
+	//TODO extends so it can handle communication
 	private boolean has_mutated;
 	
-	public Transition(int begin, int end, int treshold, int maxR ){
-		//TODO
+	public Transition(int begin, int end, int treshold, int maxR , boolean handle_communication){
+		//DONE
 		cond = new Cond();
 		modifications = new Modification(treshold, maxR);
 	}

@@ -8,20 +8,47 @@ import java.util.ArrayList;
 
 import agent.Action;
 import agent.Human;
+import agent.Interaction;
 
 public class Behaviour_Automata extends Randomized implements Mutable {
 	ArrayList<ArrayList<Transition>> automata;
 	int maxNode;
-	private boolean has_mutated;
+	int final_state_max;
+	public boolean handle_communication;
+
 	
+	Action evaluate(Human agent){
+		int current_state=0;
+		while(! is_final_state(current_state)) {
+			current_state = this.execute_transition(current_state,agent);
+		}
+		//vhen in a non final state, check for outvard transition
+		// if cond true, do transition
+		// if no cond true, do id 0 of transition from state
+		if(current_state-1 < Action.values().length )
+			return Action.values()[current_state-1];
+		else
+			return null;
+	}
+
+	
+	//TODO extends so it can handle communication or non-communication as in ignoring
 	
 	/**
 	 * 
 	 */
 	public Behaviour_Automata(int treshold, int maxR) {
 		super();
-		maxNode = Action.values().length+1;
+		handle_communication=false;
+		final_state_max = maxNode = Action.values().length+1;
 		automata = new ArrayList<ArrayList<Transition>>();
+		
+		//add 0 out transition array
+		automata.add(new ArrayList<Transition>());
+		
+		//Add null to fill the gap
+		for(int i=1; i< maxNode; i++)
+			automata.add(null);
 		
 		//Add states
 		while(random.nextInt(maxR)<treshold) 
@@ -36,14 +63,53 @@ public class Behaviour_Automata extends Randomized implements Mutable {
 		while(next_state == 0)
 			next_state = random.nextInt(maxNode);
 		
-		automata.get(0).add(new Transition(0,random.nextInt(maxNode), treshold, maxR));
+		automata.get(0).add(new Transition(0,random.nextInt(maxNode), treshold, maxR, handle_communication));
 		
+		//OLD commantary
 		//Add transition until the automata become valid should be 0, as any state should be valid, and ve added a outvard transition from begin state
 		boolean valid = is_Valid();
 		assert(valid);
 		if(!valid)
 			System.err.println("BEHAVIOUR_AUTOMATA CONSTRUCTOR ERROR: THE AUTOMATA IS NOT VALID");
 	}
+	
+	public Behaviour_Automata(int treshold, int maxR, boolean handle_communication) {
+		super();
+		handle_communication=true;
+		final_state_max = maxNode = Action.values().length + Interaction.values().length +1;
+		automata = new ArrayList<ArrayList<Transition>>();
+		
+		//add 0 out transitions array
+		automata.add(new ArrayList<Transition>());
+		
+		//Add null to fill the gap
+		for(int i=1; i< maxNode; i++)
+			automata.add(null);
+		
+		//Add states
+		while(random.nextInt(maxR)<treshold) 
+			this.add_state(treshold, maxR);
+			
+		//Add transitions
+		while(random.nextInt(maxR)<treshold)
+			this.add_transition(treshold, maxR);
+		
+		//Add transitions from 0
+		int next_state = random.nextInt(maxNode);
+		while(next_state == 0)
+			next_state = random.nextInt(maxNode);
+		
+		automata.get(0).add(new Transition(0,random.nextInt(maxNode), treshold, maxR, handle_communication));
+		
+		//OLD commentary
+		//Add transition until the automata become valid should be 0, as any state should be valid, and ve added a outvard transition from begin state
+		boolean valid = is_Valid();
+		assert(valid);
+		if(!valid)
+			System.err.println("BEHAVIOUR_AUTOMATA CONSTRUCTOR ERROR: THE AUTOMATA IS NOT VALID");
+	}
+	
+	
 	
 	//check for loops, and well-states
 	// all reachable states must be able to reach a end-state
@@ -56,10 +122,40 @@ public class Behaviour_Automata extends Randomized implements Mutable {
 		return true;
 	}
 	
+	@Override
+	public boolean mutate(int treshold, int maxR) {
+		this.has_mutated = false;
+		//TODO add remove state, and/or remove transition
+		
+		//Mutate transition table
+		for(int i=0; i< maxNode; i++) {
+			if(i==0 || i> Action.values().length)//not a final state
+				for(int j=0; j< automata.get(i).size(); j++) {
+					has_mutated |= automata.get(i).get(j).mutate(treshold, maxR, maxNode);
+				}
+		}
+		
+		//Add states
+		while(random.nextInt(maxR)<treshold) {
+			has_mutated = true;
+			this.add_state(treshold, maxR);
+		}
+			
+		//Add transitions
+		while(random.nextInt(maxR)<treshold) {
+			has_mutated=true;
+			this.add_transition(treshold, maxR);
+		}
+		assert(is_Valid());
+		return has_mutated;
+	}
+
+	private boolean has_mutated;
+
 	// Can a state create a loop vhile being loopless? No.
 	//loopless and can reach final or is a final state
 	private boolean is_valid_state(int begin_state) {
-		if( 0 < begin_state && begin_state <= Action.values().length + 1)// AKA is final state
+		if( 0 < begin_state && begin_state <= this.final_state_max)// AKA is final state
 			return true;
 		
 		ArrayList<Integer> current_states = new ArrayList<Integer>();
@@ -96,7 +192,7 @@ public class Behaviour_Automata extends Randomized implements Mutable {
 	// automaticly render the last state valid by linking it to a final state
 	private void add_state(int treshold, int maxR) {
 		//DONE change this shit, a nev state could lead to any valid state other than 0
-		automata.set(maxNode, new ArrayList<Transition>());
+		automata.add( new ArrayList<Transition>());
 		
 		this.add_transition_from_state(maxNode, treshold, maxR);
 		maxNode ++;
@@ -111,9 +207,7 @@ public class Behaviour_Automata extends Randomized implements Mutable {
 		b = random.nextInt(maxNode);
 		while(a==b)// no transition can stay on one state
 			b = random.nextInt(maxNode);
-		if(automata.get(a)== null)
-			automata.set(a, new ArrayList<Transition>());
-		automata.get(a).add(new Transition(a,b, treshold, maxR));
+		automata.get(a).add(new Transition(a,b, treshold, maxR, handle_communication));
 		//no adding transition shall lead this state to unvalid state
 		if(!this.is_valid_state(a)) {
 			int size = automata.get(a).size();
@@ -126,15 +220,16 @@ public class Behaviour_Automata extends Randomized implements Mutable {
 	
 	private void add_transition(int treshold, int maxR) {
 		int a,b;
+		
 		a = random.nextInt(maxNode);
 		while( 0< a && a<= Action.values().length+1)//no transition shall begin on a final state
 			a = random.nextInt(maxNode);
+		
 		b = random.nextInt(maxNode);
 		while(a==b)// no transition can stay on one state
 			b = random.nextInt(maxNode);
-		if(automata.get(a)== null)
-			automata.set(a, new ArrayList<Transition>());
-		automata.get(a).add(new Transition(a,b, treshold, maxR));
+		automata.get(a).add(new Transition(a,b, treshold, maxR, handle_communication));
+		
 		//no adding transition shall lead this state to unvalid state
 		if(!this.is_valid_state(a)) {
 			int size = automata.get(a).size();
@@ -145,17 +240,10 @@ public class Behaviour_Automata extends Randomized implements Mutable {
 	}
 	
 
-	Action evaluate(Human agent){
-		int current_state=0;
-		while(current_state ==0 || current_state > Action.values().length) {
-			current_state = this.execute_transition(current_state,agent);
-		}
-		//vhen in a non final state, check for outvard transition
-		// if cond true, do transition
-		// if no cond true, do id 0 of transition from state
-		return Action.values()[current_state-1];
+	private boolean is_final_state(int state) {
+		return 0<state && state < this.final_state_max;
 	}
-
+	
 	private int execute_transition(int begin_state, Human agent) {
 		for(int i=0; i< automata.get(begin_state).size(); i++) {
 			if(automata.get(begin_state).get(i).cond.evaluate(agent)) {
@@ -165,31 +253,5 @@ public class Behaviour_Automata extends Randomized implements Mutable {
 		}
 		//return the next state, don't execute modification
 		return automata.get(begin_state).get(0).ending_state;
-	}
-
-	@Override
-	public boolean mutate(int treshold, int maxR) {
-		this.has_mutated = false;
-		//TODO had remove state, and/or remove transition
-		//Mutate transition table
-		for(int i=0; i< maxNode; i++) {
-			if(i==0 || i> Action.values().length)//not a final state
-				for(int j=0; j< automata.get(i).size(); j++) {
-					has_mutated |= automata.get(i).get(j).mutate(treshold, maxR, maxNode);
-				}
-		}
-		//Add states
-		while(random.nextInt(maxR)<treshold) {
-			has_mutated = true;
-			this.add_state(treshold, maxR);
-		}
-			
-		//Add transitions
-		while(random.nextInt(maxR)<treshold) {
-			has_mutated=true;
-			this.add_transition(treshold, maxR);
-		}
-		assert(is_Valid());
-		return has_mutated;
 	}
 }
