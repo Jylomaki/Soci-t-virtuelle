@@ -179,28 +179,28 @@ public class Behaviour_Automata extends Randomized implements Mutable {
 		if(!this.is_valid_state(a)) {
 			int size = automata.get(a).size();
 			automata.get(a).remove(size-1);
-			this.add_transition(treshold, maxR);
+			this.add_transition_from_state(begin_state, treshold, maxR);
 		}
 		assert(is_Valid());
 	}
 	
 	
 	private void add_transition(int treshold, int maxR) {
-		int a,b;
+		int begin_state,end_state;
 		
-		a = random.nextInt(maxNode);
-		while( 0< a && a<= this.final_state_max)//no transition shall begin on a final state
-			a = random.nextInt(maxNode);
+		begin_state = random.nextInt(maxNode);
+		while( 0< begin_state && begin_state < this.final_state_max)//no transition shall begin on a final state
+			begin_state = random.nextInt(maxNode);
 		
-		b = random.nextInt(maxNode);
-		while(a==b)// no transition can stay on one state
-			b = random.nextInt(maxNode);
-		automata.get(a).add(new Transition(a,b, treshold, maxR, handle_communication));
+		end_state = random.nextInt(maxNode);
+		while(begin_state==end_state)// no transition can stay on one state
+			end_state = random.nextInt(maxNode);
+		automata.get(begin_state).add(new Transition(begin_state,end_state, treshold, maxR, handle_communication));
 		
 		//no adding transition shall lead this state to unvalid state
-		if(!this.is_valid_state(a)) {
-			int size = automata.get(a).size();
-			automata.get(a).remove(size-1);
+		if(!this.is_valid_state(begin_state)) {
+			int size = automata.get(begin_state).size();
+			automata.get(begin_state).remove(size-1);
 			this.add_transition(treshold, maxR);
 		}
 		

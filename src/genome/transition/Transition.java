@@ -16,6 +16,7 @@ public class Transition extends Randomized implements Mutable{
 		cond = new Cond();
 		modifications = new Modification(treshold, maxR);
 	}
+	
 	@Override
 	@Deprecated
 	public boolean mutate(int treshold, int maxR) {

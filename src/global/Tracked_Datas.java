@@ -2,11 +2,12 @@ package global;
 
 public class Tracked_Datas {
 	int actions_performed[];
-	int intercation_performed[];
+	int interaction_performed[];
 	int soloaction_performed[];
+	int ignorance_on_com[];
 	
 	int ressource[];
-	int craft_and_sttlement[];
+	int craft_and_settlement[];
 	int tribus_size[];
-	int human;
+	int human[];
 }
