@@ -39,4 +39,19 @@ public class Transition extends Randomized implements Mutable{
 		
 		return has_mutated;
 	}
+
+	
+	public Transition clone(){
+		return new Transition(this.starting_state, this.ending_state, this.cond.clone(), this.modifications.clone());
+	}
+	
+	public Transition(int starting_state, int ending_state, Cond cond, Modification modifications) {
+		super();
+		this.starting_state = starting_state;
+		this.ending_state = ending_state;
+		this.cond = cond;
+		this.modifications = modifications;
+	}
+	
+	
 }

@@ -26,6 +26,16 @@ public class Genomal_Variables extends Randomized implements Mutable {
 		vars.set(id,evaluate);
 	}
 	
+	public Genomal_Variables clone(){
+		return new Genomal_Variables();
+	}
+	
+	public Genomal_Variables() {
+		super();
+		vars = new ArrayList<Integer>();
+	}
+
+
 	public int get(int id){
 		return vars.get(id);
 	}

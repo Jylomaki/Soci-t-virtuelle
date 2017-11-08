@@ -115,5 +115,34 @@ public class Expr extends Randomized implements Mutable{
 			}
 		}
 	}
+	
+	public Expr clone(){
+		switch(this.type){
+		case OP_ADD:
+		case OP_DIV:
+		case OP_MULT:
+		case OP_SUB:
+			return new Expr(this.type, this.expr1.clone(), this.expr2.clone(), null, null, 0);
+		case VALUE_AGENT:
+			return new Expr(this.type, null,null,this.agent_Value, null, 0);
+		case VALUE_INTEGER:
+			return new Expr(this.type, null, null, null, null, this.value);
+		case VALUE_TERRAIN:
+			return new Expr(this.type, null,null,null, this.terrain_Value, 0);
+		default:
+			return null;
+		
+		}
+	}
+
+	public Expr(Type type, Expr expr1, Expr expr2, Agent_Value agent_Value, Terrain_Value terrain_Value, int value) {
+		super();
+		this.type = type;
+		this.expr1 = expr1;
+		this.expr2 = expr2;
+		this.agent_Value = agent_Value;
+		this.terrain_Value = terrain_Value;
+		this.value = value;
+	}
 
 }

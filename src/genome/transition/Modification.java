@@ -31,8 +31,19 @@ public class Modification extends Randomized implements Mutable{
 	
 	public void execute(Human agent){
 		if(id>=0){
-			agent.genomalVariables.set(id, expr.evaluate(agent));
-			next_mod.execute(agent);
+			switch(type){
+			case EQ:
+				agent.genomalVariables.set(id, expr.evaluate(agent));
+				next_mod.execute(agent);
+				break;
+			case INCR:
+				agent.genomalVariables.set(id, expr.evaluate(agent) + agent.genomalVariables.get(id));
+				next_mod.execute(agent);
+				break;
+			default:
+				break;
+	
+			}
 		}
 	}
 
@@ -61,4 +72,21 @@ public class Modification extends Randomized implements Mutable{
 		
 		return has_mutated || expr.mutate(treshold, maxR);
 	}
+
+	public Modification clone(){
+		if(id >=0){
+			return new Modification(this.type, this.expr.clone(), id, this.next_mod.clone());
+		}
+		return new Modification(null,null,-1,null);
+	}
+	
+	public Modification(Type type, Expr expr, Integer id, Modification next_mod) {
+		super();
+		this.type = type;
+		this.expr = expr;
+		this.id = id;
+		this.next_mod = next_mod;
+	}
+	
+	
 }

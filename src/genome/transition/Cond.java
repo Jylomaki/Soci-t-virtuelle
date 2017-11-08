@@ -173,4 +173,35 @@ public class Cond extends Randomized implements Mutable{
 			}
 		}
 	}
+
+	public Cond clone(){
+		switch(this.meta_Type(this.type)){
+		case BOOL0:
+			return new Cond(this.type, this.com_Type, null, null, null, null, this.handle_communication);
+		case BOOL1:
+			return new Cond(this.type, this.com_Type, this.cond1.clone(), null, null, null, this.handle_communication);
+		case BOOL2:
+			return new Cond(this.type, this.com_Type, this.cond1.clone(), this.cond2.clone(), null, null, this.handle_communication);
+		case CMP:
+			return new Cond(this.type, this.com_Type, null, null, this.expr1.clone(), this.expr2.clone(), this.handle_communication);
+		default:
+			break;
+		
+		}
+		System.err.println("Cond clone: couldn't clone");
+		return null;
+	}
+	public Cond(Type type, Com_Type com_Type, Cond cond1, Cond cond2, Expr expr1, Expr expr2,
+			boolean handle_communication) {
+		super();
+		this.type = type;
+		this.com_Type = com_Type;
+		this.cond1 = cond1;
+		this.cond2 = cond2;
+		this.expr1 = expr1;
+		this.expr2 = expr2;
+		this.handle_communication = handle_communication;
+	}
+	
+	
 }

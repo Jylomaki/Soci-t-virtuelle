@@ -5,6 +5,7 @@ import global.Mutable;
 import global.Randomized;
 
 import java.util.ArrayList;
+import java.util.Collection;
 
 import action.Action;
 import agent.Human;
@@ -220,5 +221,42 @@ public class Behaviour_Automata extends Randomized implements Mutable {
 		}
 		//return the next state, don't execute modification
 		return automata.get(begin_state).get(0).ending_state;
+	}
+
+	public Behaviour_Automata clone(){
+		return new Behaviour_Automata(this.clone_transitions(), this.maxNode, this.final_state_max, this.handle_communication);
+	}
+	
+	private ArrayList<ArrayList<Transition>> clone_transitions() {
+		ArrayList<ArrayList<Transition>> list = new ArrayList<ArrayList<Transition>>();
+		for(int i=0; i<this.maxNode; i++){
+			if(this.is_final_state(i)){
+				list.add(null);
+			}
+			else{
+				list.add(clone_transition(this.automata.get(i)));
+			}
+		}
+		return list;
+	}
+
+
+	private  ArrayList<Transition> clone_transition(ArrayList<Transition> arrayList) {
+		// TODO Auto-generated method stub
+		ArrayList<Transition> list = new ArrayList<Transition>();
+		for(int i=0; i< arrayList.size(); i++){
+			list.add(arrayList.get(i).clone());
+		}
+		return list;
+	}
+
+
+	public Behaviour_Automata(ArrayList<ArrayList<Transition>> automata, int maxNode, int final_state_max,
+			boolean handle_communication) {
+		super();
+		this.automata = automata;
+		this.maxNode = maxNode;
+		this.final_state_max = final_state_max;
+		this.handle_communication = handle_communication;
 	}
 }
