@@ -3,6 +3,7 @@ package agent;
 import genome.*;
 import global.Randomized;
 import global.Vector;
+import terrain.Case;
 
 import java.util.ArrayList;
 
@@ -24,6 +25,7 @@ public class Human extends Randomized{
 	public int energy, age, food, ressource;
 	public Sex sex;
 	public int culture;
+	public Case currentCase;
 	
 	//Communication used datas
 	public int interlocutor_id;

@@ -1,8 +1,10 @@
 package genome.transition;
 
 import agent.Human;
+import agent.Human.Communication_Status;
 import global.Mutable;
 import global.Randomized;
+import terrain.Terrain_Value;
 
 public class Cond extends Randomized implements Mutable{
 	private enum Type{
@@ -13,7 +15,8 @@ public class Cond extends Randomized implements Mutable{
 		HIGHER,
 		TRUE,
 		FALSE,
-		COMMUNICATION
+		COMMUNICATION,
+		TERRAIN_VALUE
 	}
 	
 	private enum Com_Type{
@@ -32,12 +35,12 @@ public class Cond extends Randomized implements Mutable{
 	}
 	
 	Type type;
+	Terrain_Value terrain_value;
 	Com_Type com_Type;
 	Cond cond1,cond2;
 	Expr expr1,expr2;
 	private boolean has_mutated;
 	private boolean handle_communication;
-	
 	
 	public Cond(){
 		type = this.next_Type();
@@ -67,26 +70,40 @@ public class Cond extends Randomized implements Mutable{
 			return false;
 		case TRUE:
 			return true;
-			//TODO ADD COMMUNICATION COND
+			// done
 		case COMMUNICATION:
 			switch(this.com_Type) {
 			case HAS_BEEN_HURT:
-				return agent.comStatus == agent.comStatus.HURTED;
+				return agent.comStatus == Communication_Status.HURTED;
 			case HAS_RECEIVED_FOOD:
-				return agent.comStatus == agent.comStatus.GIVEN_FOOD;
+				return agent.comStatus == Communication_Status.GIVEN_FOOD;
 			case HAS_RECEIVED_RESSOURCE:
-				return agent.comStatus == agent.comStatus.GIVEN_RESSOURCE;
+				return agent.comStatus == Communication_Status.GIVEN_RESSOURCE;
 			case IS_FIRST:
-				return agent.comStatus == agent.comStatus.BEGIN;
+				return agent.comStatus == Communication_Status.BEGIN;
 			case LIKE:
 				return agent.does_like_interlocutor();
 			default:
 				break;
 			
 			}
+		case TERRAIN_VALUE:
+			switch(this.terrain_value){
+			case CORPSE:
+				return agent.currentCase.corpse_present();
+			case FOOD:
+				return agent.currentCase.food_present();
+			case RESSOURCE:
+				return agent.currentCase.ressource_present();
+			case SETTLEMENT:
+				return agent.currentCase.settlement_present();
+			default:
+				break;
+			}
 		default:
 			break;
 		}
+		System.err.println("Cond: could not resolve type");
 		return false;
 	}
 

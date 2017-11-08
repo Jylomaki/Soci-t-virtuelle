@@ -2,7 +2,6 @@ package genome.transition;
 
 import java.util.Random;
 
-import terrain.Terrain_Value;
 import agent.Agent_Value;
 import agent.Human;
 import global.Mutable;
@@ -16,7 +15,6 @@ public class Expr extends Randomized implements Mutable{
 		OP_DIV,
 		VALUE_INTEGER,
 		VALUE_AGENT,
-		VALUE_TERRAIN,
 	}
 	static int type_count=7;
 	
@@ -25,7 +23,6 @@ public class Expr extends Randomized implements Mutable{
 	Type type;
 	Expr expr1, expr2;
 	Agent_Value agent_Value;
-	Terrain_Value terrain_Value;
 	int value;
 	
 	public Expr(){
@@ -47,14 +44,38 @@ public class Expr extends Randomized implements Mutable{
 			return expr1.evaluate(agent) * expr2.evaluate(agent);
 		case OP_SUB:
 			return expr1.evaluate(agent) - expr2.evaluate(agent);
-		//TODO
 		case VALUE_AGENT:
-			break;
-		case VALUE_TERRAIN:
-			break;
+			switch(this.agent_Value){
+			case AGE:
+				return agent.age;
+			case ENERGY:
+				return agent.energy;
+			case FOOD:
+				return agent.food;
+			case RESSOURCE:
+				return agent.ressource;
+			case SEXE:
+				switch(agent.sex){
+				case CHILDREN_1:
+					return 3;
+				case CHILDREN_2:
+					return 4;
+				case S1:
+					return 1;
+				case S2:
+					return 2;
+				default:
+					break;
+				
+				}
+			default:
+				break;
+			
+			}
 		default:
 			break;
 		}
+		System.err.println("Expr: could not resolve type");
 		return 0;
 	}
 
@@ -99,7 +120,6 @@ public class Expr extends Randomized implements Mutable{
 	private boolean is_static(Type t){
 		switch(t){
 		case VALUE_AGENT:
-		case VALUE_TERRAIN:
 		case VALUE_INTEGER:
 			return true;
 		default:
@@ -122,26 +142,23 @@ public class Expr extends Randomized implements Mutable{
 		case OP_DIV:
 		case OP_MULT:
 		case OP_SUB:
-			return new Expr(this.type, this.expr1.clone(), this.expr2.clone(), null, null, 0);
+			return new Expr(this.type, this.expr1.clone(), this.expr2.clone(), null, 0);
 		case VALUE_AGENT:
-			return new Expr(this.type, null,null,this.agent_Value, null, 0);
+			return new Expr(this.type, null,null,this.agent_Value, 0);
 		case VALUE_INTEGER:
-			return new Expr(this.type, null, null, null, null, this.value);
-		case VALUE_TERRAIN:
-			return new Expr(this.type, null,null,null, this.terrain_Value, 0);
+			return new Expr(this.type, null, null, null, this.value);
 		default:
 			return null;
 		
 		}
 	}
 
-	public Expr(Type type, Expr expr1, Expr expr2, Agent_Value agent_Value, Terrain_Value terrain_Value, int value) {
+	public Expr(Type type, Expr expr1, Expr expr2, Agent_Value agent_Value, int value) {
 		super();
 		this.type = type;
 		this.expr1 = expr1;
 		this.expr2 = expr2;
 		this.agent_Value = agent_Value;
-		this.terrain_Value = terrain_Value;
 		this.value = value;
 	}
 

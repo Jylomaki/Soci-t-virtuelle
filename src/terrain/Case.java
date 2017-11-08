@@ -66,6 +66,29 @@ public class Case {
 			break;
 		}
 	}
+
+	public boolean settlement_present() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	public boolean ressource_present() {
+		// TODO Auto-generated method stub
+		return false;
+
+	}
+
+	public boolean food_present() {
+		// TODO Auto-generated method stub
+		return false;
+
+	}
+
+	public boolean corpse_present() {
+		// TODO Auto-generated method stub
+		return false;
+
+	}
 	
 	
 	
