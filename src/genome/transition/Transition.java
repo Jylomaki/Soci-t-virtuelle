@@ -8,11 +8,13 @@ public class Transition extends Randomized implements Mutable{
 	public int ending_state;
 	public Cond cond;
 	public Modification modifications;
-	//TODO extends so it can handle communication
+	//TODO extends so it can handle communication *done*
 	private boolean has_mutated;
 	
 	public Transition(int begin, int end, int treshold, int maxR , boolean handle_communication){
 		//DONE
+		this.starting_state = begin;
+		this.ending_state = end;
 		cond = new Cond();
 		modifications = new Modification(treshold, maxR);
 	}
@@ -51,6 +53,21 @@ public class Transition extends Randomized implements Mutable{
 		this.ending_state = ending_state;
 		this.cond = cond;
 		this.modifications = modifications;
+	}
+
+	@Override
+	public void print() {
+		System.out.println("FROM: " + this.starting_state + " TO: " + this.ending_state);
+		System.out.println("On condition: ");
+		this.cond.print();
+		
+	}
+
+	@Override
+	@Deprecated
+	public void print(String mise_forme) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 	
