@@ -10,4 +10,6 @@ public class Tracked_Datas {
 	int ressource[];
 	int craft_and_settlement[];
 	int tribus_size[];
+
 }
+

@@ -1,22 +1,21 @@
 package genome.transition;
 
-import java.util.Random;
 
 import agent.Agent_Value;
 import agent.Human;
 import global.Mutable;
 import global.Randomized;
+import global.local_random;
 
 public class Expr extends Randomized implements Mutable{
 	private enum Type{
+		VALUE_AGENT,
 		OP_ADD,
 		OP_SUB,
 		OP_MULT,
 		OP_DIV,
-		VALUE_INTEGER,
-		VALUE_AGENT,
+		VALUE_INTEGER
 	}
-	static int type_count=7;
 	
 	private boolean has_mutated;
 	
@@ -24,14 +23,24 @@ public class Expr extends Randomized implements Mutable{
 	Expr expr1, expr2;
 	Agent_Value agent_Value;
 	int value;
-	
 	public Expr(){
+		//System.out.println("Expr generated: " + Randomized.generated++);
 		type = this.next_Type();
 		if(type == Type.VALUE_INTEGER)
-			value = random.nextInt();
+			value = local_random.nextInt();
 		this.generate_Adequate();
+		//System.out.println("Expr type:" + this.type);
 	}
 	
+	public Expr(Type type, Expr expr1, Expr expr2, Agent_Value agent_Value, int value) {
+		super();
+		this.type = type;
+		this.expr1 = expr1;
+		this.expr2 = expr2;
+		this.agent_Value = agent_Value;
+		this.value = value;
+	}
+
 	public int evaluate(Human agent) {
 		switch(type){
 		case VALUE_INTEGER:
@@ -85,7 +94,7 @@ public class Expr extends Randomized implements Mutable{
 	public boolean mutate(int treshold, int maxR) {
 		has_mutated= false;
 		
-		if(random.nextInt(maxR) < treshold){
+		if(local_random.nextInt(maxR) < treshold){
 			//change type
 			type = next_Type(type);
 			has_mutated = true;
@@ -97,43 +106,13 @@ public class Expr extends Randomized implements Mutable{
 		}
 		
 		else if(type == Type.VALUE_INTEGER){
-			if(random.nextInt(maxR) < treshold){
-				value = random.nextInt();
+			if(local_random.nextInt(maxR) < treshold){
+				value = local_random.nextInt();
 				has_mutated = true;
 			}
 		}
 
 		return has_mutated;
-	}
-	
-	private Type next_Type(){
-		return Type.values()[random.nextInt(type_count)];
-	}
-	
-	private Type next_Type(Type t){
-		Type next = Type.values()[random.nextInt(type_count)];
-		while(next == t)
-			next = Type.values()[random.nextInt(type_count)];
-		return next;
-	}
-	
-	private boolean is_static(Type t){
-		switch(t){
-		case VALUE_AGENT:
-		case VALUE_INTEGER:
-			return true;
-		default:
-			return false;
-		}
-	}
-	
-	private void generate_Adequate() {
-		if(! is_static(this.type)){
-			if(expr1 == null){
-				expr1 = new Expr();
-				expr2 = new Expr();
-			}
-		}
 	}
 	
 	public Expr clone(){
@@ -153,13 +132,127 @@ public class Expr extends Randomized implements Mutable{
 		}
 	}
 
-	public Expr(Type type, Expr expr1, Expr expr2, Agent_Value agent_Value, int value) {
-		super();
-		this.type = type;
-		this.expr1 = expr1;
-		this.expr2 = expr2;
-		this.agent_Value = agent_Value;
-		this.value = value;
+	private Type next_Type(){
+		int permil = local_random.nextInt(1000);
+		int currentType =0;
+		while(permil > typePermil(Type.values()[currentType])) {
+			permil -= typePermil(Type.values()[currentType]);
+			currentType++;
+		}
+		return Type.values()[currentType];
+	}
+	
+	private Type next_Type(Type t){
+		Type next = next_Type();
+		while(next == t)
+			next = next_Type();
+		return next;
+	}
+	
+	private boolean is_static(Type t){
+		switch(t){
+		case VALUE_AGENT:
+		case VALUE_INTEGER:
+			return true;
+		case OP_ADD:
+		case OP_DIV:
+		case OP_MULT:
+		case OP_SUB:
+		}
+		return false;
+	}
+	
+	private void generate_Adequate() {
+		if(! is_static(this.type)){
+			if(expr1 == null){
+				this.expr1 = new Expr();
+				this.expr2 = new Expr();
+			}
+		}
+		if( this.agent_Value == null)
+			this.agent_Value = Agent_Value.values()[local_random.nextInt(Agent_Value.values().length)];
+	}
+	
+	private int typePermil(Type t) {
+		// 4 *50 + 2 * 400 = 1000
+		if(this.is_static(t))
+			return 400;
+		return 50;
+	}
+
+	@Override
+	public void print() {
+		switch( this.type) {
+		case OP_ADD:
+			System.out.println("( ADD");
+			this.expr1.print("#->");
+			this.expr2.print("#->");
+			System.out.println(")");
+			break;
+		case OP_DIV:
+			System.out.println("( DIV");
+			this.expr1.print("#->");
+			this.expr2.print("#->");
+			System.out.println(")");
+			break;
+		case OP_MULT:
+			System.out.println("( MULT");
+			this.expr1.print("#->");
+			this.expr2.print("#->");
+			System.out.println(")");
+			break;
+		case OP_SUB:
+			System.out.println("( SUB");
+			this.expr1.print("#->");
+			this.expr2.print("#->");
+			System.out.println(")");
+			break;
+		case VALUE_AGENT:
+			System.out.println("( " + this.agent_Value + ")");
+			break;
+		case VALUE_INTEGER:
+			System.out.println("( "+this.value+")");
+			break;
+		default:
+			break;
+		
+		}		
+	}
+
+	@Override
+	public void print(String s) {
+		switch(this.type) {
+		case OP_ADD:
+			System.out.println(s+" ADD");
+			this.expr1.print("#--"+s);
+			this.expr2.print("#--"+s);
+			break;		
+		case OP_DIV:
+			System.out.println(s+" DIV");
+			this.expr1.print("#--"+s);
+			this.expr2.print("#--"+s);
+			break;
+		case OP_MULT:
+			System.out.println(s+" MULT");
+			this.expr1.print("#--"+s);
+			this.expr2.print("#--"+s);
+			break;
+		case OP_SUB:
+			System.out.println(s+" SUB");
+			this.expr1.print("#--"+s);
+			this.expr2.print("#--"+s);
+			break;		
+		case VALUE_AGENT:
+			System.out.println(s+this.agent_Value.toString());
+			break;
+		case VALUE_INTEGER:
+			System.out.println(s + this.value);
+			break;
+		default:
+			break;
+		
+		}
+		
 	}
 
 }

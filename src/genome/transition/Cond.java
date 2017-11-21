@@ -4,15 +4,16 @@ import agent.Human;
 import agent.Human.Communication_Status;
 import global.Mutable;
 import global.Randomized;
+import global.local_random;
 import terrain.Terrain_Value;
 
 public class Cond extends Randomized implements Mutable{
 	private enum Type{
+		LOWER_OR_EQ,
+		HIGHER,
 		AND,
 		OR,
 		NOT,
-		LOWER_OR_EQ,
-		HIGHER,
 		TRUE,
 		FALSE,
 		COMMUNICATION,
@@ -34,6 +35,7 @@ public class Cond extends Randomized implements Mutable{
 		CMP
 	}
 	
+	static int depth=0;
 	Type type;
 	Terrain_Value terrain_value;
 	Com_Type com_Type;
@@ -43,6 +45,7 @@ public class Cond extends Randomized implements Mutable{
 	private boolean handle_communication;
 	
 	public Cond(){
+		//System.out.println("Cond generated: " + Randomized.generated++);
 		type = this.next_Type();
 		this.generate_Adequate();
 	}
@@ -54,6 +57,18 @@ public class Cond extends Randomized implements Mutable{
 			
 	}
 	
+	public Cond(Type type, Com_Type com_Type, Cond cond1, Cond cond2, Expr expr1, Expr expr2,
+			boolean handle_communication) {
+		super();
+		this.type = type;
+		this.com_Type = com_Type;
+		this.cond1 = cond1;
+		this.cond2 = cond2;
+		this.expr1 = expr1;
+		this.expr2 = expr2;
+		this.handle_communication = handle_communication;
+	}
+
 	public boolean evaluate(Human agent){
 		switch(type){
 		case NOT:
@@ -110,7 +125,7 @@ public class Cond extends Randomized implements Mutable{
 	@Override
 	public boolean mutate(int treshold, int maxR) {
 		has_mutated= false;
-		if(random.nextInt(maxR) < treshold){
+		if(local_random.nextInt(maxR) < treshold){
 			//change type
 			type = next_Type(type);
 			has_mutated = true;
@@ -129,13 +144,69 @@ public class Cond extends Randomized implements Mutable{
 			break;
 			
 		}
+		this.simplify();
 		return has_mutated;
 	}
 	
+	public void simplify() {
+		if(cond1 != null)
+			this.cond1.simplify();
+		if(this.cond2 !=null)
+			this.cond2.simplify();	
+		
+		switch(this.type) {
+		case AND:
+			if(this.cond1.type == Type.FALSE || this.cond2.type == Type.FALSE)
+				this.type = Type.FALSE;
+			break;
+		case HIGHER:
+			break;
+		case LOWER_OR_EQ:
+			break;
+		case NOT:
+			if(this.cond1.type == Type.FALSE){
+				this.type = Type.TRUE;
+			}
+			else if(this.cond1.type == Type.TRUE) {
+				this.type = Type.FALSE;
+			}
+			break;
+		case OR:
+			if(this.cond1.type == Type.TRUE || this.cond2.type == Type.TRUE)
+				this.type = Type.TRUE;
+			break;
+		default:
+			break;
+		}
+	}
+
+	public Cond clone(){
+		switch(this.meta_Type(this.type)){
+		case BOOL0:
+			return new Cond(this.type, this.com_Type, null, null, null, null, this.handle_communication);
+		case BOOL1:
+			return new Cond(this.type, this.com_Type, this.cond1.clone(), null, null, null, this.handle_communication);
+		case BOOL2:
+			return new Cond(this.type, this.com_Type, this.cond1.clone(), this.cond2.clone(), null, null, this.handle_communication);
+		case CMP:
+			return new Cond(this.type, this.com_Type, null, null, this.expr1.clone(), this.expr2.clone(), this.handle_communication);
+		default:
+			break;
+		
+		}
+		System.err.println("Cond clone: couldn't clone");
+		return null;
+	}
+
 	private Type next_Type(){
-		if(this.handle_communication)
-			return Type.values()[random.nextInt(Type.values().length)];
-		return Type.values()[random.nextInt(Type.values().length)-1];
+		int currentType =0;
+		int permil = local_random.nextInt(1000);
+		while(permil > this.typePermil(Type.values()[currentType])) {
+			permil -= this.typePermil(Type.values()[currentType]);
+			currentType++;
+		}
+		Type r = Type.values()[currentType];
+		return r;
 	}
 	
 	private Type next_Type(Type t) {
@@ -163,7 +234,7 @@ public class Cond extends Randomized implements Mutable{
 	
 	private void generate_Adequate(){
 		if(type == Type.COMMUNICATION)
-			this.com_Type = Com_Type.values()[random.nextInt(Com_Type.values().length)];
+			this.com_Type = Com_Type.values()[local_random.nextInt(Com_Type.values().length)];
 		else {
 			switch( meta_Type(type)){
 			case BOOL1:
@@ -190,35 +261,111 @@ public class Cond extends Randomized implements Mutable{
 			}
 		}
 	}
-
-	public Cond clone(){
-		switch(this.meta_Type(this.type)){
+	
+	private int typePermil(Type t) {
+		switch(this.meta_Type(t)) {
 		case BOOL0:
-			return new Cond(this.type, this.com_Type, null, null, null, null, this.handle_communication);
+			return 500;
 		case BOOL1:
-			return new Cond(this.type, this.com_Type, this.cond1.clone(), null, null, null, this.handle_communication);
+			return 200;
 		case BOOL2:
-			return new Cond(this.type, this.com_Type, this.cond1.clone(), this.cond2.clone(), null, null, this.handle_communication);
+			return 150;
 		case CMP:
-			return new Cond(this.type, this.com_Type, null, null, this.expr1.clone(), this.expr2.clone(), this.handle_communication);
+			return 150;
+		default:
+			return 1000;
+
+		}
+	}
+	
+	public void print() {
+		switch(type) {
+		case AND:
+			System.out.println("(AND");
+			this.cond1.print("#->");
+			this.cond2.print("#->");
+			System.out.println(")");
+			break;
+		case COMMUNICATION:
+			System.out.println(this.com_Type);
+			break;
+		case FALSE:
+			System.out.println("FALSE");
+			break;
+		case HIGHER:
+			System.out.println("( HIGHER");
+			this.expr1.print("#->");
+			this.expr2.print("#->");
+			System.out.println(")");
+			break;
+		case LOWER_OR_EQ:
+			System.out.println("( LOWER_OR_EQ");
+			this.expr1.print("#->");
+			this.expr2.print("#->");
+			System.out.println(")");
+			break;
+		case NOT:
+			System.out.println("( NOT");
+			this.cond1.print("#->");
+			System.out.println(")");
+			break;
+		case OR:
+			System.out.println("( OR");
+			this.cond1.print("#->");
+			this.cond2.print("#->");
+			System.out.println(")");
+			break;
+		case TERRAIN_VALUE:
+			System.out.println("(" + this.terrain_value + ")");
+			break;
+		case TRUE:
+			System.out.println("( TRUE )");
+			break;
 		default:
 			break;
-		
 		}
-		System.err.println("Cond clone: couldn't clone");
-		return null;
-	}
-	public Cond(Type type, Com_Type com_Type, Cond cond1, Cond cond2, Expr expr1, Expr expr2,
-			boolean handle_communication) {
-		super();
-		this.type = type;
-		this.com_Type = com_Type;
-		this.cond1 = cond1;
-		this.cond2 = cond2;
-		this.expr1 = expr1;
-		this.expr2 = expr2;
-		this.handle_communication = handle_communication;
 	}
 	
-	
+	public void print(String s) {
+		switch(type) {
+		case AND:
+			System.out.println(s+" AND");
+			this.cond1.print("#--"+s);
+			this.cond2.print("#--"+s);
+			break;
+		case COMMUNICATION:
+			System.out.print(s+" " +this.com_Type.toString());
+			break;
+		case FALSE:
+			System.out.println(s+" FALSE");
+			break;
+		case HIGHER:
+			System.out.println(s+" HIGHER");
+			this.expr1.print("#--"+s);
+			this.expr2.print("#--"+s);
+			break;
+		case LOWER_OR_EQ:
+			System.out.println(s+" LOWER_OR_EQ");
+			this.expr1.print("#--"+s);
+			this.expr2.print("#--"+s);
+			break;
+		case NOT:
+			System.out.println(s+" NOT");
+			this.cond1.print("#--"+s);
+			break;
+		case OR:
+			System.out.println(s+" OR");
+			this.cond1.print("#--"+s);
+			this.cond2.print("#--"+s);
+			break;
+		case TERRAIN_VALUE:
+			System.out.println(s+" " + this.terrain_value.toString());
+			break;
+		case TRUE:
+			System.out.println(s+" TRUE");
+			break;
+		default:
+			break;
+		}
+	}
 }

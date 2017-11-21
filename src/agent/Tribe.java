@@ -4,16 +4,18 @@ import java.awt.Color;
 import java.util.ArrayList;
 
 import global.Randomized;
+import global.Tracked_Datas;
 
 public class Tribe extends Randomized {
 	int size;
-	int fitness_mult;
 	int fitness_score;
 	Color color;
 	int spawnX,spawnY;
 	ArrayList<Human> back_up_humans;
+	ArrayList<Human> living_humans;
+	Tracked_Datas tracked_datas;
 	//TODO:
-	// vhen size reach max tribu size, back up the live human of this tribe
+	// vhen size reach max instansiation tribu size, back up the live human of this tribe
 	
 	public Tribe(){
 		back_up_humans = new ArrayList<Human>();
@@ -26,13 +28,20 @@ public class Tribe extends Randomized {
 	public void setSize(int size) {
 		this.size = size;
 	}
-	public int getFitness_mult() {
-		return fitness_mult;
+	
+	public void update_fitness() {
+		this.fitness_score += size;
+		if(this.size==global.Global_variables.tribe_max_size) {
+			backup_humans();
+		}
 	}
 	
-	public void setFitness_mult(int fitness_mult) {
-		this.fitness_mult = fitness_mult;
+	private void backup_humans() {
+		this.back_up_humans= new ArrayList<Human>();
+		for(int i=0; i<global.Global_variables.tribe_max_size; i++)
+			this.back_up_humans.add(this.living_humans.get(i));
 	}
+
 	public int getFitness_score() {
 		return fitness_score;
 	}

@@ -3,6 +3,7 @@ package genome.transition;
 import agent.Human;
 import global.Mutable;
 import global.Randomized;
+import global.local_random;
 
 public class Modification extends Randomized implements Mutable{
 	private enum Type{
@@ -20,13 +21,18 @@ public class Modification extends Randomized implements Mutable{
 	boolean has_mutated;
 	
 	public Modification (int treshold, int maxR){
-		if(random.nextInt(maxR)< treshold){
-			id = random.nextInt(max_Id);
-			expr = new Expr();
-			next_mod = new Modification(treshold, maxR);
+		if(local_random.nextInt(maxR)< treshold){
+			generate_self(treshold, maxR);
 		}
 		else
 			id = -1;
+	}
+	
+	private void generate_self(int treshold, int maxR) {
+		id = local_random.nextInt(max_Id);
+		expr = new Expr();
+		next_mod = new Modification(treshold, maxR);
+		type = Type.values()[local_random.nextInt(Type.values().length)];
 	}
 	
 	public void execute(Human agent){
@@ -50,12 +56,24 @@ public class Modification extends Randomized implements Mutable{
 	@Override
 	public boolean mutate(int treshold, int maxR) {
 		has_mutated = false;
-		if(random.nextInt(maxR)< treshold){
-			id = random.nextInt(max_Id);
+		
+		//mutate: if void, then fill itself
+		if(id == -1 )
+			if (local_random.nextInt(maxR)< treshold) {
+				this.generate_self(treshold, maxR);
+				return true;
+			}
+			else
+				return false;
+		
+		//mutate id
+		if(local_random.nextInt(maxR)< treshold){
+			id = local_random.nextInt(max_Id);
 			has_mutated = true;
 		}
 		
-		if(random.nextInt(maxR)< treshold){
+		//mutate Type
+		if(local_random.nextInt(maxR)< treshold){
 			switch(type){
 			case EQ:
 				type = Type.INCR;
@@ -86,6 +104,20 @@ public class Modification extends Randomized implements Mutable{
 		this.expr = expr;
 		this.id = id;
 		this.next_mod = next_mod;
+	}
+
+	@Override
+	@Deprecated
+	public void print() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	@Deprecated
+	public void print(String mise_forme) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 	

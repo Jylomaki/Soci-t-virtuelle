@@ -39,5 +39,21 @@ public class Genomal_Variables extends Randomized implements Mutable {
 	public int get(int id){
 		return vars.get(id);
 	}
+
+
+	@Override
+	@Deprecated
+	public void print() {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	@Deprecated
+	public void print(String mise_forme) {
+		// TODO Auto-generated method stub
+		
+	}
 	
 }

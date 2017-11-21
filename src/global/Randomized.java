@@ -1,20 +1,20 @@
 package global;
 
-import java.util.Random;
-
 
 public class Randomized {
-	public static Random random;
+	public static local_random random;
+	public static int generated = 0;
 	
 	public Randomized(){
-		random = new Random();
+		//random = new Random();
+		random = new  local_random();
 	}
 	
-	public void init_rand(int seed){
-		random = new Random(seed);
+	public static void init_rand(int seed){
+		local_random.init_seed(seed);
 	}
 	
-	public void init_rand(){
-		random = new Random();
+	public static void init_rand(){
+		local_random.init();
 	}
 }
