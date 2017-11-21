@@ -10,11 +10,8 @@ public class Collect_Food extends ParentAction {
 
 	@Override
 	public void execute(Human human) {
-		if(DataManagement.terrain.getCase(human.x, human.y).getType() == TypeCase.FOOD){
-			DataManagement.terrain.getCase(human.x, human.y).setType(TypeCase.EMPTY);
-			human.food += DataManagement.FOOD_RESTITUTION;
-		}else if(DataManagement.terrain.getCase(human.x, human.y).getType() == TypeCase.FR){
-			DataManagement.terrain.getCase(human.x, human.y).setType(TypeCase.RESSOURCE);
+		if(DataManagement.terrain.getCase(human.x, human.y).food_present()){
+			DataManagement.terrain.getCase(human.x, human.y).gatherFood();
 			human.food += DataManagement.FOOD_RESTITUTION;
 		}
 	}

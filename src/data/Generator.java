@@ -22,7 +22,7 @@ public class Generator{
 			tribes.get(i).setColor(new Color(r,g,b));
 			tribes.get(i).setSpawnX(random.nextInt(DataManagement.TerrainGridX));
 			tribes.get(i).setSpawnY(random.nextInt(DataManagement.TerrainGridY));
-			int nomberHumanToGenerate = random.nextInt(MAX_TRIBE_SIZE);
+			int nomberHumanToGenerate = MAX_TRIBE_SIZE;
 			for(int j=0;j<nomberHumanToGenerate;j++)
 				tribes.get(i).getBack_up_humans().add(generateHuman(tribes.get(i)));
 		}

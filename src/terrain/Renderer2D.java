@@ -38,6 +38,7 @@ public class Renderer2D extends JComponent{
 		int caseHeight = height/terrain.getHeight();
 		for(int i=0;i<terrain.getWidth();i++){
 			for(int j=0;j<terrain.getHeight();j++){
+				terrain.getCase(i, j).update();
 				g2d.setColor(terrain.getCase(i, j).getColor());
 				g2d.fillRect(i*caseWidth,j*caseHeight,caseWidth,caseHeight);
 			}

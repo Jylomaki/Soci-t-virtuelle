@@ -16,6 +16,6 @@ public class Action{
 	}
 	
 	public Type type;
-	public static int solo_action_max = 4;
-	public static int all_action_max = 8;
+	public final static int solo_action_max = 4;
+	public final static int all_action_max = 8;
 }

@@ -3,6 +3,7 @@ package agent;
 import genome.*;
 import global.Randomized;
 import global.Vector;
+import global.local_random;
 import terrain.Case;
 
 import java.util.ArrayList;
@@ -81,8 +82,8 @@ public class Human extends Randomized{
 	}
 	
 	public void wiggle(){
-		int tr = random.nextInt(50);
-		int tl = -random.nextInt(50);
+		int tr = local_random.nextInt(50);
+		int tl = -local_random.nextInt(50);
 		dir.rotate(tr);
 		dir.rotate(tl);
 	}
