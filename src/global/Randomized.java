@@ -1,7 +1,5 @@
 package global;
 
-import java.util.Random;
-
 
 public class Randomized {
 	public static local_random random;

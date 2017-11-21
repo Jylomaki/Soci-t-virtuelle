@@ -2,6 +2,7 @@ package genome.transition;
 
 import global.Mutable;
 import global.Randomized;
+import global.local_random;
 
 public class Transition extends Randomized implements Mutable{
 	public int starting_state;
@@ -34,8 +35,8 @@ public class Transition extends Randomized implements Mutable{
 		has_mutated |= cond.mutate(treshold, maxR);
 		has_mutated |= modifications.mutate(treshold, maxR);
 		
-		if(random.nextInt(maxR)< treshold){
-			this.ending_state = random.nextInt(maxState);
+		if(local_random.nextInt(maxR)< treshold){
+			this.ending_state = local_random.nextInt(maxState);
 			has_mutated = true;
 		}
 		

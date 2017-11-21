@@ -4,6 +4,7 @@ import agent.Human;
 import agent.Human.Communication_Status;
 import global.Mutable;
 import global.Randomized;
+import global.local_random;
 import terrain.Terrain_Value;
 
 public class Cond extends Randomized implements Mutable{
@@ -124,7 +125,7 @@ public class Cond extends Randomized implements Mutable{
 	@Override
 	public boolean mutate(int treshold, int maxR) {
 		has_mutated= false;
-		if(random.nextInt(maxR) < treshold){
+		if(local_random.nextInt(maxR) < treshold){
 			//change type
 			type = next_Type(type);
 			has_mutated = true;
@@ -143,9 +144,42 @@ public class Cond extends Randomized implements Mutable{
 			break;
 			
 		}
+		this.simplify();
 		return has_mutated;
 	}
 	
+	public void simplify() {
+		if(cond1 != null)
+			this.cond1.simplify();
+		if(this.cond2 !=null)
+			this.cond2.simplify();	
+		
+		switch(this.type) {
+		case AND:
+			if(this.cond1.type == Type.FALSE || this.cond2.type == Type.FALSE)
+				this.type = Type.FALSE;
+			break;
+		case HIGHER:
+			break;
+		case LOWER_OR_EQ:
+			break;
+		case NOT:
+			if(this.cond1.type == Type.FALSE){
+				this.type = Type.TRUE;
+			}
+			else if(this.cond1.type == Type.TRUE) {
+				this.type = Type.FALSE;
+			}
+			break;
+		case OR:
+			if(this.cond1.type == Type.TRUE || this.cond2.type == Type.TRUE)
+				this.type = Type.TRUE;
+			break;
+		default:
+			break;
+		}
+	}
+
 	public Cond clone(){
 		switch(this.meta_Type(this.type)){
 		case BOOL0:
@@ -166,7 +200,7 @@ public class Cond extends Randomized implements Mutable{
 
 	private Type next_Type(){
 		int currentType =0;
-		int permil = random.nextInt(1000);
+		int permil = local_random.nextInt(1000);
 		while(permil > this.typePermil(Type.values()[currentType])) {
 			permil -= this.typePermil(Type.values()[currentType]);
 			currentType++;
@@ -200,7 +234,7 @@ public class Cond extends Randomized implements Mutable{
 	
 	private void generate_Adequate(){
 		if(type == Type.COMMUNICATION)
-			this.com_Type = Com_Type.values()[random.nextInt(Com_Type.values().length)];
+			this.com_Type = Com_Type.values()[local_random.nextInt(Com_Type.values().length)];
 		else {
 			switch( meta_Type(type)){
 			case BOOL1:

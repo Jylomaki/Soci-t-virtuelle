@@ -5,6 +5,7 @@ import agent.Agent_Value;
 import agent.Human;
 import global.Mutable;
 import global.Randomized;
+import global.local_random;
 
 public class Expr extends Randomized implements Mutable{
 	private enum Type{
@@ -26,7 +27,7 @@ public class Expr extends Randomized implements Mutable{
 		//System.out.println("Expr generated: " + Randomized.generated++);
 		type = this.next_Type();
 		if(type == Type.VALUE_INTEGER)
-			value = random.nextInt();
+			value = local_random.nextInt();
 		this.generate_Adequate();
 		//System.out.println("Expr type:" + this.type);
 	}
@@ -93,7 +94,7 @@ public class Expr extends Randomized implements Mutable{
 	public boolean mutate(int treshold, int maxR) {
 		has_mutated= false;
 		
-		if(random.nextInt(maxR) < treshold){
+		if(local_random.nextInt(maxR) < treshold){
 			//change type
 			type = next_Type(type);
 			has_mutated = true;
@@ -105,8 +106,8 @@ public class Expr extends Randomized implements Mutable{
 		}
 		
 		else if(type == Type.VALUE_INTEGER){
-			if(random.nextInt(maxR) < treshold){
-				value = random.nextInt();
+			if(local_random.nextInt(maxR) < treshold){
+				value = local_random.nextInt();
 				has_mutated = true;
 			}
 		}
@@ -132,7 +133,7 @@ public class Expr extends Randomized implements Mutable{
 	}
 
 	private Type next_Type(){
-		int permil = Randomized.random.nextInt(1000);
+		int permil = local_random.nextInt(1000);
 		int currentType =0;
 		while(permil > typePermil(Type.values()[currentType])) {
 			permil -= typePermil(Type.values()[currentType]);
@@ -169,7 +170,7 @@ public class Expr extends Randomized implements Mutable{
 			}
 		}
 		if( this.agent_Value == null)
-			this.agent_Value = Agent_Value.values()[random.nextInt(Agent_Value.values().length)];
+			this.agent_Value = Agent_Value.values()[local_random.nextInt(Agent_Value.values().length)];
 	}
 	
 	private int typePermil(Type t) {

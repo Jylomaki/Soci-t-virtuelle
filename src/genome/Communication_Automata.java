@@ -1,7 +1,6 @@
 package genome;
 
 import global.Mutable;
-import global.Randomized;
 
 public class Communication_Automata extends Behaviour_Automata implements Mutable{
 
