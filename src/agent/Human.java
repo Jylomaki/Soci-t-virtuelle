@@ -64,7 +64,7 @@ public class Human extends Randomized{
 	public void update(){
 		age++;
 		//System.out.println(energy);
-		energy--;
+		energy -= (age/100);
 		if(energy<=MUST_EAT && food>0){
 			food--;
 			energy += ENERGY_RESTITUTION;
