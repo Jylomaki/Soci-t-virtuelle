@@ -260,7 +260,9 @@ public class Behaviour_Automata extends Randomized implements Mutable {
 				automata.get(a).remove(size-1);
 			}
 			else if(time_tried >= max_tries) {
-				System.err.println("Tried "+this.max_tries+" times, and no valid trans could be found");
+				int size = automata.get(a).size();
+				automata.get(a).remove(size-1);
+				System.err.println("Tried "+ max_tries +" times, and no valid trans could be found");
 				//this.print();
 			}
 		}while(!validity && time_tried++ < max_tries);

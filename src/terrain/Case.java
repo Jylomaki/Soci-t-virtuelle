@@ -19,9 +19,17 @@ public class Case {
 	private TypeCase type;
 	
 	public ArrayList<Human> humans;
-	//public ArrayList<Corpse> corpses;
 	public int food;
 	public int ressource;
+	public int settlement;
+	public int corpse_food;
+	public int corpse_ressource;
+	
+	private static int foodMax = 100;
+	private static int ressourceMax = 100;
+	private static int presence_threshold = 5;
+	private static int childrenGatherRate = 5;
+
 	
 	
 	
@@ -31,18 +39,18 @@ public class Case {
 	
 	public Case(){
 		Random random = new Random();
-		int rand = random.nextInt(100);
+		int rand = random.nextInt(foodMax);
 		if(rand<=percentageFood){
-			food = random.nextInt(100);
+			food = random.nextInt(foodMax);
 			color = new Color(0,food,0);
 			type = TypeCase.FOOD;
 		}else if(rand<=percentageFood+percentageRessource){
-			ressource = random.nextInt(100);
+			ressource = random.nextInt(ressourceMax);
 			color = new Color(0,0,ressource);
 			type = TypeCase.RESSOURCE;
 		}else if(rand<=percentageFood+percentageRessource+percentageFR){
-			food = random.nextInt(100);
-			ressource = random.nextInt(100);
+			food = random.nextInt(foodMax);
+			ressource = random.nextInt(ressourceMax);
 			color = new Color(0,food,ressource);
 			type = TypeCase.FR;
 		}else{
@@ -56,31 +64,37 @@ public class Case {
 	public void update(){
 		switch(type){
 		case FOOD:
-			if(food<100){
+			if(food<foodMax){
 				food++;
 				color = new Color(0,Math.max(food,0),0);
 			}
 		break;
 		case RESSOURCE:
-			if(ressource<100){
+			if(ressource<ressourceMax){
 				ressource++;
 				color = new Color(0,0,Math.max(ressource,0));
 			}
 		break;
 		case FR:
-			if(food<100){
+			if(food<foodMax){
 				food++;
 			}
-			if(ressource<100){
+			if(ressource<ressourceMax){
 				ressource++;
 				
 			}
 			color = new Color(0,Math.max(food,0),Math.max(ressource,0));
 		break;
 		case EMPTY:
-			
 		break;
+		}
+		if(this.settlement_present()){
+			this.settlement -= global.Global_variables.settlement_decay_rate;
+		}
 	}
+	
+	public void execute_human_actions(){
+		
 	}
 	
 	public Color getColor() {
@@ -113,36 +127,63 @@ public class Case {
 		}
 	}
 
-	public void gatherFood(){
-		food -= 100;
-		color = new Color(0,Math.max(food,0),Math.max(ressource,0));
+	public int gatherFood(){
+		if(food > 0){
+			int retour = food;
+			food -= foodMax;
+			color = new Color(0,Math.max(food,0),Math.max(ressource,0));
+			return retour;
+		}
+		return 0;
 	}
 	
-	public void gatherRessource(){
-		ressource -= 100;
-		color = new Color(0,Math.max(food,0),Math.max(ressource,0));
+	public int childGatherFood(){
+		if(food > 0){
+			int retour = childrenGatherRate;
+			food -= childrenGatherRate;
+			color = new Color(0,Math.max(food,0),Math.max(ressource,0));
+			return retour;
+		}
+		return 0;
 	}
+	
+	public int gatherRessource(){
+		if(ressource>0){
+			int retour = ressource;
+			ressource -= ressourceMax;
+			color = new Color(0,Math.max(food,0),Math.max(ressource,0));
+			return retour;
+		}
+		return 0;
+	}
+	
+	public int childGatherRessource(){
+		if(ressource>0){
+			int retour = childrenGatherRate;
+			ressource -= childrenGatherRate;
+			color = new Color(0,Math.max(food,0),Math.max(ressource,0));
+			return retour;
+		}
+		return 0;
+	}
+	
 	
 	public boolean settlement_present() {
-		// TODO Auto-generated method stub
-		return false;
+		return this.settlement>presence_threshold;
 	}
 
 	public boolean ressource_present() {
-		// TODO Auto-generated method stub
-		return ressource > 0;
+		return ressource > presence_threshold;
 
 	}
 
 	public boolean food_present() {
-		// TODO Auto-generated method stub
-		return food > 0;
+		return food > presence_threshold;
 
 	}
 
 	public boolean corpse_present() {
-		// TODO Auto-generated method stub
-		return false;
+		return this.corpse_food>0 || this.corpse_ressource>0;
 
 	}
 	
