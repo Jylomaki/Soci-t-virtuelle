@@ -18,26 +18,29 @@ public class Behaviour_Automata extends Randomized implements Mutable {
 	private boolean has_mutated;
 	private int time_tried=0;
 	private final int max_tries = 512;
+	
+	public Behaviour_Automata(){
+		this(global.Global_variables.def_treshold, global.Global_variables.def_maxR);
+	}
+	
+	public Behaviour_Automata(boolean b){
+		this(global.Global_variables.def_treshold, global.Global_variables.def_maxR,b);
+	}
 	public Behaviour_Automata(int treshold, int maxR) {
-		super();
-		handle_communication=false;
-		this.basic_setup(treshold, maxR);
-		
-		boolean valid = is_Valid();
-		assert(valid);
-		if(!valid)
-			System.err.println("BEHAVIOUR_AUTOMATA CONSTRUCTOR ERROR: THE AUTOMATA IS NOT VALID");
+		this( treshold,  maxR, false);
 	}
 
 
 	public Behaviour_Automata(int treshold, int maxR, boolean handle_communication) {
 		super();
 		this.handle_communication=handle_communication;
-		this.basic_setup(treshold, maxR);
-		boolean valid = is_Valid();
-		assert(valid);
-		if(!valid)
-			System.err.println("BEHAVIOUR_AUTOMATA CONSTRUCTOR ERROR: THE AUTOMATA IS NOT VALID");
+		do{
+			this.basic_setup(treshold, maxR);
+			boolean valid = is_Valid();
+			assert(valid);
+			if(!valid)
+				System.err.println("BEHAVIOUR_AUTOMATA CONSTRUCTOR ERROR: THE AUTOMATA IS NOT VALID");
+		}while(!this.is_Valid());
 	}
 
 
@@ -51,7 +54,7 @@ public class Behaviour_Automata extends Randomized implements Mutable {
 	}
 
 
-	Action.Type evaluate(Human agent){
+	public Action.Type evaluate(Human agent){
 		int current_state=0;
 		while(! is_final_state(current_state)) {
 			current_state = this.execute_transition(current_state,agent);
@@ -59,7 +62,10 @@ public class Behaviour_Automata extends Randomized implements Mutable {
 		//vhen in a non final state, check for outvard transition
 		// if cond true, do transition
 		// if no cond true, do id 0 of transition from state
-		return Action.Type.values()[current_state];
+		Action.Type retour_action = Action.Type.values()[current_state-1]; 
+		if(this.handle_communication == false && !Action.actionIgnoring(retour_action))	
+			System.err.println("Behaviour automata: solo automata returning interaction action" + retour_action);
+		return Action.Type.values()[current_state-1];
 	}
 
 
@@ -304,6 +310,11 @@ public class Behaviour_Automata extends Randomized implements Mutable {
 	}
 	
 	private int execute_transition(int begin_state, Human agent) {
+		if(this.automata.get(begin_state)==null){
+			System.err.println("Behaviour automata: Execute transition:Error, null array of trans out from this state: begin at " + begin_state);
+			this.print();
+			return 0;
+		}
 		for(int i=0; i< automata.get(begin_state).size(); i++) {
 			if(automata.get(begin_state).get(i).cond.evaluate(agent)) {
 				automata.get(begin_state).get(i).modifications.execute(agent);

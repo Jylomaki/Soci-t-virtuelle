@@ -22,6 +22,7 @@ public class Human extends Randomized{
 
 	
 	//comportement information
+	public Tribe tribe;// reference to tribe to access the shared automatas
 	public Behaviour_Automata behaviour_automata;
 	public Communication_Automata communication_automata;
 	public Genomal_Variables genomalVariables;
@@ -96,6 +97,7 @@ public class Human extends Randomized{
 			if(this.ressource > 0)
 				DataManagement.terrain.getCase(x, y).corpse_ressource += this.ressource;
 		}
+		this.currentCase.humans.remove(this);
 		wiggle();
 		x = (int) ((x+(dir.x/100))%DataManagement.TerrainGridX);
 		y = (int) ((y+(dir.y/100))%DataManagement.TerrainGridY);
@@ -103,6 +105,8 @@ public class Human extends Randomized{
 			x = DataManagement.TerrainGridX-1;
 		if(y<0)
 			y = DataManagement.TerrainGridY-1;
+		this.currentCase = DataManagement.terrain.getCase(x, y);
+		this.currentCase.humans.add(this);
 		update_genre();
 	}
 	

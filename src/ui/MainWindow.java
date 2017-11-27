@@ -25,7 +25,7 @@ public class MainWindow extends JFrame {
 	
 	public MainWindow(){
 		setSize(WIDTH, HEIGHT);
-		setTitle("Société Virtuelle");
+		setTitle("Societe Virtuelle");
 		setVisible(true);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setLayout(new BorderLayout());
@@ -81,19 +81,7 @@ public class MainWindow extends JFrame {
 	}
 	
 	public void loop(){
-
-		for(Tribe tribe:DataManagement.tribes){
-			for(int i=tribe.getBack_up_humans().size()-1;i>=0;i--){
-				tribe.getBack_up_humans().get(i).update();
-			}
-		}
-		for(Tribe tribe:DataManagement.tribes){
-			for(int i=tribe.getBack_up_humans().size()-1;i>=0;i--){
-				tribe.getBack_up_humans().get(i).executeAction();
-			}
-		}
 		renderer.repaint();
-
 	}
 	
 }

@@ -48,6 +48,10 @@ public class Expr extends Randomized implements Mutable{
 		case OP_ADD:
 			return expr1.evaluate(agent) + expr2.evaluate(agent);
 		case OP_DIV:
+			int i= expr1.evaluate(agent);
+			int j= expr2.evaluate(agent);
+			if(j==0)
+				return Integer.MAX_VALUE;
 			return expr1.evaluate(agent) / expr2.evaluate(agent);
 		case OP_MULT:
 			return expr1.evaluate(agent) * expr2.evaluate(agent);

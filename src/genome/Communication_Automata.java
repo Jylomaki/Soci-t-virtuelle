@@ -4,6 +4,11 @@ import global.Mutable;
 
 public class Communication_Automata extends Behaviour_Automata implements Mutable{
 
+	
+	public Communication_Automata(){
+		super(true);
+	}
+	
 	public Communication_Automata(int treshold, int maxR) {
 		super(treshold, maxR, true);
 	}

@@ -3,6 +3,8 @@ package agent;
 import java.awt.Color;
 import java.util.ArrayList;
 
+import genome.Behaviour_Automata;
+import genome.Communication_Automata;
 import global.Randomized;
 import global.Tracked_Datas;
 
@@ -11,14 +13,66 @@ public class Tribe extends Randomized {
 	int fitness_score;
 	Color color;
 	int spawnX,spawnY;
-	ArrayList<Human> back_up_humans;
-	ArrayList<Human> living_humans;
+	public ArrayList<Human> living_humans;
 	Tracked_Datas tracked_datas;
-	//TODO:
 	// vhen size reach max instansiation tribu size, back up the live human of this tribe
+	// Nape, not with the same 
+	
+	//Automatas shared by humans:
+	public Behaviour_Automata A_S1, A_ChildS1, A_S2, A_ChildS2;
+	public Communication_Automata cA_S1, cA_S2, cA_childS1, cA_childS2;
 	
 	public Tribe(){
-		back_up_humans = new ArrayList<Human>();
+		this.living_humans = new ArrayList<Human>();
+		do{
+			this.A_S1 = new Behaviour_Automata(false);
+		}while(!this.A_S1.is_Valid());
+		do{
+			this.A_ChildS1 = new Behaviour_Automata(false);
+		}while(!this.A_S1.is_Valid());
+		do{
+			this.A_S2 = new Behaviour_Automata(false);
+		}while(!this.A_S1.is_Valid());
+		do{
+			this.A_ChildS2 = new Behaviour_Automata(false);
+		}while(!this.A_S1.is_Valid());
+		
+		do{
+			this.cA_childS1 = new Communication_Automata();
+		}while(!this.A_S1.is_Valid());
+		do{
+			this.cA_childS2 = new Communication_Automata();
+		}while(!this.A_S1.is_Valid());
+		do{
+			this.cA_S1 = new Communication_Automata();
+		}while(!this.A_S1.is_Valid());
+		do{
+			this.cA_S2 = new Communication_Automata();
+		}while(!this.A_S1.is_Valid());
+	}
+	
+	public Behaviour_Automata get_adequate_Automata(Human h, boolean handle_com){
+		switch(h.sex){
+		case CHILDREN_1:
+			if(handle_com)
+				return this.cA_childS1;
+			return this.A_ChildS1;
+		case CHILDREN_2:
+			if(handle_com)
+				return this.cA_childS2;
+			return this.A_ChildS2;
+		case S1:
+			if(handle_com)
+				return this.cA_S1;
+			return this.A_S1;
+		case S2:
+			if(handle_com)
+				return this.cA_S2;
+			return this.A_S2;
+		default:
+			System.err.println("Tribe: get adequate automate: could not resovle sex");
+			return null;
+		}
 	}
 	
 	public int getSize() {
@@ -31,16 +85,8 @@ public class Tribe extends Randomized {
 	
 	public void update_fitness() {
 		this.fitness_score += size;
-		if(this.size==global.Global_variables.tribe_max_size) {
-			backup_humans();
-		}
 	}
 	
-	private void backup_humans() {
-		this.back_up_humans= new ArrayList<Human>();
-		for(int i=0; i<global.Global_variables.tribe_max_size; i++)
-			this.back_up_humans.add(this.living_humans.get(i));
-	}
 
 	public int getFitness_score() {
 		return fitness_score;
@@ -69,13 +115,6 @@ public class Tribe extends Randomized {
 	}
 	public void setSpawnY(int spawnY) {
 		this.spawnY = spawnY;
-	}
-	
-	public ArrayList<Human> getBack_up_humans() {
-		return back_up_humans;
-	}
-	public void setBack_up_humans(ArrayList<Human> back_up_humans) {
-		this.back_up_humans = back_up_humans;
 	}
 	
 	

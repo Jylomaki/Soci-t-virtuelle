@@ -49,9 +49,9 @@ public class Renderer2D extends JComponent{
 		/*Human Rendering*/
 		for(int i=0;i<DataManagement.tribes.size();i++){
 			g2d.setColor(DataManagement.tribes.get(i).getColor());
-			for(int j=0;j<DataManagement.tribes.get(i).getBack_up_humans().size();j++){
+			for(int j=0;j<DataManagement.tribes.get(i).living_humans.size();j++){
 			
-				g2d.fillOval(DataManagement.tribes.get(i).getBack_up_humans().get(j).x * caseWidth,DataManagement.tribes.get(i).getBack_up_humans().get(j).y * caseHeight, caseWidth, caseHeight);
+				g2d.fillOval(DataManagement.tribes.get(i).living_humans.get(j).x * caseWidth,DataManagement.tribes.get(i).living_humans.get(j).y * caseHeight, caseWidth, caseHeight);
 			}
 		}	
 

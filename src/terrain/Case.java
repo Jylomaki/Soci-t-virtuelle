@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Random;
 
+import action.Action;
 import agent.Human;
 
 public class Case {
@@ -59,6 +60,7 @@ public class Case {
 			ressource = 0;
 			type = TypeCase.EMPTY;
 		}
+		this.humans = new ArrayList<Human>();
 	}
 
 	public void update(){
@@ -95,18 +97,50 @@ public class Case {
 	}
 	
 	public void execute_human_actions(){
+		if(this.humans == null){
+			System.out.println("Case:execute_human_action: Human list null: passing by");
+			return;
+		}
 		int i=0;
+		for(int j=0; j<humans.size(); j++){
+			//System.out.println("CASE: Updated a human, human on case:" + humans.size());
+			humans.get(j).update();
+		}
+		
 		while(i< this.humans.size()) {
 			if(this.humans.size()-i >=2) {
-				//TODO make humans i and i+1 interact
+				// make humans i and i+1 interact
 				//Varning! be careful of vhen human moves from case to cases.
+				//System.out.println("Case: executing a human interaction");
+				Human h1 = this.humans.get(i);
+				h1.comStatus = Human.Communication_Status.BEGIN;
+				Human h2 = this.humans.get(i);
+				boolean ignored_both;
+				int interaction_count = 0;
+				do{
+					Action.Type a1 = h1.tribe.get_adequate_Automata(h1, true).evaluate(h1);
+					Action.execute_action(a1, h1, h2, this);
+					h2.comStatus = Action.correspondingStatus(a1);
+					
+					Action.Type a2 = h2.tribe.get_adequate_Automata(h2, true).evaluate(h2);
+					Action.execute_action(a2, h2, h1, this);
+					h1.comStatus = Action.correspondingStatus(a2);
+
+					ignored_both= Action.actionIgnoring(a1) && Action.actionIgnoring(a2);
+					
+				}while(!ignored_both && interaction_count++ < global.Global_variables.interaction_max);
 				//then next
 				i+=2;
 			}
 			else {
-				//TODO make human do solo action
+				// make human do solo action
+				//System.out.println("Case: executing a human solo action");
+				Human h = this.humans.get(i);
+				Action.Type a = h.tribe.get_adequate_Automata(h, false).evaluate(h);
+				Action.execute_action(a, h, null, this);
 				i++;
 			}
+			System.out.println("Case: executing human_action: done i:" + i);
 		}
 	}
 	

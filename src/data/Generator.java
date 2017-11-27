@@ -24,7 +24,7 @@ public class Generator{
 			tribes.get(i).setSpawnY(random.nextInt(DataManagement.TerrainGridY));
 			int nomberHumanToGenerate = MAX_TRIBE_SIZE;
 			for(int j=0;j<nomberHumanToGenerate;j++)
-				tribes.get(i).getBack_up_humans().add(generateHuman(tribes.get(i)));
+				tribes.get(i).living_humans.add(generateHuman(tribes.get(i)));
 		}
 		return tribes;
 	}
@@ -38,6 +38,10 @@ public class Generator{
 		human.energy = random.nextInt(200) + 600;
 		human.culture = random.nextInt(10);
 		human.food = 1;
+		human.tribe=tribe;
+		tribe.living_humans.add(human);
+		human.currentCase = DataManagement.terrain.getCase(human.x, human.y);
+		DataManagement.terrain.getCase(human.x, human.y).humans.add(human);
 		return human;
 	}
 	

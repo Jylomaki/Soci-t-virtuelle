@@ -25,11 +25,14 @@ public class Action{
 	public final static int all_action_max = 8;
 	
 	public static void execute_action(Type action,Human perpetrator, Human interlocutor, Case current_case){
+		if(interlocutor == null && !Action.actionIgnoring(action)){
+			System.err.println("Action Execute action: Calling for a interaction whilst interlocutor is null:Action:" + action);
+			return;
+		}
 		switch(action){
 		case COLLECT_FOOD:
 			switch(perpetrator.sex){
 			case CHILDREN_1:
-				break;
 			case CHILDREN_2:
 				break;
 			case S1:
@@ -72,4 +75,46 @@ public class Action{
 		
 		}
 	}
+	public static Human.Communication_Status correspondingStatus(Action.Type a){
+		switch(a){
+		case COLLECT_FOOD:
+			break;
+		case COLLECT_RESSOURCE:
+			break;
+		case GIVE_FOOD:
+			return Human.Communication_Status.GIVEN_FOOD;
+		case GIVE_RESSOURCE:
+			return Human.Communication_Status.GIVEN_RESSOURCE;
+		case HURT:
+			return Human.Communication_Status.HURTED;
+		case MOVE:
+			break;
+		case REPRODUCE:
+			break;
+		case SETTLEMENT:
+			break;
+		default:
+			break;
+		}
+		return Human.Communication_Status.BEGIN;
+	}
+	
+	public static boolean actionIgnoring(Action.Type a){
+		switch(a){
+		case COLLECT_FOOD:
+		case COLLECT_RESSOURCE:
+		case MOVE:
+		case SETTLEMENT:
+			return true;
+		case GIVE_FOOD:
+		case GIVE_RESSOURCE:
+		case HURT:
+		case REPRODUCE:
+			return false;
+		default:
+			break;
+		}
+		return true;
+	}
+	
 }

@@ -16,9 +16,9 @@ public class DataManagement {
 	
 	public static void killHuman(Human human){
 		for(Tribe tribe:tribes){
-			for(int i=tribe.getBack_up_humans().size()-1;i>=0;i--){
-				if(tribe.getBack_up_humans().get(i).id == human.id){
-					tribe.getBack_up_humans().remove(i);
+			for(int i=tribe.living_humans.size()-1;i>=0;i--){
+				if(tribe.living_humans.get(i).id == human.id){
+					tribe.living_humans.remove(i);
 					return;
 				}
 			}

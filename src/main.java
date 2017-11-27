@@ -19,7 +19,7 @@ public class main {
 		Cond c;
 		Expr e;
 		boolean print=false;
-		int test_count =2000;
+		int test_count =512;
 		System.out.println("Testing Expr ###########################################");
 		for(int i=0; i<test_count; i++) {
 			//System.out.println("Expr: " + i);
@@ -67,7 +67,7 @@ public class main {
 			if(print)
 				b.print();
 		}
-		b.print();
+		//b.print();
 		System.out.println("Mutated:" + mutated);
 		//b.print();
 		//Object b_A = new Behaviour_Automata(1,100);
