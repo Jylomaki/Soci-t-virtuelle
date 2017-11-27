@@ -91,10 +91,23 @@ public class Case {
 		if(this.settlement_present()){
 			this.settlement -= global.Global_variables.settlement_decay_rate;
 		}
+		this.execute_human_actions();
 	}
 	
 	public void execute_human_actions(){
-		
+		int i=0;
+		while(i< this.humans.size()) {
+			if(this.humans.size()-i >=2) {
+				//TODO make humans i and i+1 interact
+				//Varning! be careful of vhen human moves from case to cases.
+				//then next
+				i+=2;
+			}
+			else {
+				//TODO make human do solo action
+				i++;
+			}
+		}
 	}
 	
 	public Color getColor() {
