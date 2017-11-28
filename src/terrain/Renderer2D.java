@@ -57,6 +57,7 @@ public class Renderer2D extends JComponent{
 			
 				g2d.fillOval(DataManagement.tribes.get(i).living_humans.get(j).x * caseWidth,DataManagement.tribes.get(i).living_humans.get(j).y * caseHeight, caseWidth, caseHeight);
 			}
+			DataManagement.tribes.get(i).update_datas();
 		}	
 
 		

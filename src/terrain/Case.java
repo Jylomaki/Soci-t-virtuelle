@@ -140,7 +140,7 @@ public class Case {
 				Action.execute_action(a, h, null, this);
 				i++;
 			}
-			System.out.println("Case: executing human_action: done i:" + i);
+			//System.out.println("Case: executing human_action: done i:" + i);
 		}
 	}
 	

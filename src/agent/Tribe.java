@@ -81,9 +81,11 @@ public class Tribe extends Randomized {
 	
 	
 	public void update_datas() {
-		
+		this.tracked_datas.push_back(this.currentFrame);
+		this.currentFrame.reset();
+		this.update_fitness();
 	}
-	
+
 	public int getSize() {
 		return size;
 	}
@@ -127,5 +129,17 @@ public class Tribe extends Randomized {
 	}
 	
 	
-	
+	public void mutate_autos() {
+		this.mutate_autos(global.Global_variables.def_treshold, global.Global_variables.def_maxR);
+	}
+	public void mutate_autos(int treshold, int maxR) {
+		this.A_ChildS1.mutate(treshold, maxR);
+		this.A_ChildS2.mutate(treshold, maxR);
+		this.A_S1.mutate(treshold, maxR);
+		this.A_S2.mutate(treshold, maxR);
+		this.cA_childS1.mutate(treshold, maxR);
+		this.cA_childS2.mutate(treshold, maxR);
+		this.cA_S1.mutate(treshold, maxR);
+		this.cA_S2.mutate(treshold, maxR);
+	}
 }

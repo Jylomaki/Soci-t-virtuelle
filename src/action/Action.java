@@ -75,7 +75,7 @@ public class Action{
 			break;
 		case REPRODUCE:
 			//TODO
-			//perpetrator.reproduce(interlocutor);
+			perpetrator.reproduce(interlocutor);
 			break;
 		case SETTLEMENT:
 			

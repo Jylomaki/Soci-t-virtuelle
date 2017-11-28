@@ -28,7 +28,7 @@ public class Human extends Randomized{
 	static long id_count=0;
 	
 	//Status datas
-	public long id, group_id;
+	public long id;
 	public int energy, age, food, ressource;
 	public Sex sex;
 	public int culture;
@@ -53,18 +53,29 @@ public class Human extends Randomized{
 	public Human(){
 		this.sex = Sex.values()[local_random.nextInt(Sex.values().length)];
 		dir = new Vector(100,100);
+		this.age = 0;
+		this.energy = birth_energy;
 		id = id_count++;
 	}
 	
-	public Human(long group_id, int food, int ressource, Sex sex, int culture) {
-		super();
-		this.group_id = group_id;
-		this.energy = birth_energy;
-		this.age = 0;
+	public Human(int food, int ressource, Sex sex, int culture) {
+		this();
 		this.food = food;
 		this.ressource = ressource;
 		this.sex = sex;
 		this.culture = culture;
+	}
+	
+	public Human offspring() {
+		System.out.println("HALLELUYA A CHILD IS BORN");
+		Human offspring = new Human();
+		offspring.tribe = this.tribe;
+		this.tribe.living_humans.add(offspring);
+		
+		offspring.currentCase = this.currentCase;
+		currentCase.humans.add(offspring);
+		this.tribe.mutate_autos();
+		return offspring;
 	}
 	
 	//Reflexes actions and update Attribute
@@ -116,7 +127,12 @@ public class Human extends Randomized{
 				this.sex = Sex.S2;
 			break;
 		case S1:
+			if(this.age < adult_age)
+				this.sex = Sex.CHILDREN_1;
+			break;
 		case S2:
+			if(this.age < adult_age)
+				this.sex = Sex.CHILDREN_2;
 		default:
 			break;
 		
@@ -146,12 +162,9 @@ public class Human extends Randomized{
 		}
 	}
 	
-	public Human reproduce(Human h){
+	public void reproduce(Human h){
 		if(this.parenting_ok(h))
-		{
-			return new Human();
-		}
-		return null;
+			this.offspring();
 	}
 
 	public boolean does_like_interlocutor() {
