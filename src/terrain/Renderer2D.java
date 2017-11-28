@@ -11,6 +11,10 @@ import data.DataManagement;
 
 public class Renderer2D extends JComponent{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 9009545833418986547L;
 	private Graphics2D g2d;
 	private int width,height;
 	private Terrain terrain;

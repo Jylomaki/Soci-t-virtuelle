@@ -10,14 +10,15 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
-import agent.Human;
-import agent.Tribe;
 import data.*;
 import terrain.Renderer2D;
-import terrain.Terrain;
 
 public class MainWindow extends JFrame {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7218898975087861888L;
 	private final int WIDTH = 1200;
 	private final int HEIGHT = 720;
 	private Renderer2D renderer;

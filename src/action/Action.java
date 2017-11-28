@@ -2,7 +2,6 @@ package action;
 
 import agent.Human;
 import terrain.Case;
-import agent.Sex;
 
 public class Action{
 	private static final int cooperation_overflow = 5;
@@ -23,12 +22,23 @@ public class Action{
 	public Type type;
 	public final static int solo_action_max = 4;
 	public final static int all_action_max = 8;
+	public final static int interaction_max = all_action_max - solo_action_max;
 	
 	public static void execute_action(Type action,Human perpetrator, Human interlocutor, Case current_case){
 		if(interlocutor == null && !Action.actionIgnoring(action)){
 			System.err.println("Action Execute action: Calling for a interaction whilst interlocutor is null:Action:" + action);
 			return;
 		}
+
+		perpetrator.tribe.currentFrame.actions_performed[Action.to_int(action)] ++;
+		if(interlocutor != null)
+			if(Action.actionIgnoring(action))
+				perpetrator.tribe.currentFrame.ignorance_on_com++;
+			else
+				perpetrator.tribe.currentFrame.interaction_performed[Action.to_int(action)-Action.solo_action_max]++;
+		else
+			perpetrator.tribe.currentFrame.soloaction_performed[Action.to_int(action)]++;
+			
 		switch(action){
 		case COLLECT_FOOD:
 			switch(perpetrator.sex){
@@ -115,6 +125,50 @@ public class Action{
 			break;
 		}
 		return true;
+	}
+	
+	public static Action.Type to_action_type(int i) {
+		switch(i) {
+		case 0:
+			return Action.Type.COLLECT_RESSOURCE;
+		case 1:
+			return Action.Type.COLLECT_FOOD;
+		case 2:
+			return Action.Type.MOVE;
+		case 3:
+			return Action.Type.SETTLEMENT;
+		case 4:
+			return Action.Type.GIVE_FOOD;
+		case 5:
+			return Action.Type.GIVE_RESSOURCE;
+		case 6:
+			return Action.Type.HURT;
+		case 7:
+			return Action.Type.REPRODUCE;
+		}
+		return Action.Type.MOVE;
+	}
+	
+	public static int to_int(Action.Type t) {
+		switch(t) {
+		case COLLECT_RESSOURCE:
+			return 0;
+		case COLLECT_FOOD:
+			return 1;
+		case MOVE:
+			return 2;
+		case SETTLEMENT:
+			return 3;
+		case GIVE_FOOD:
+			return 4;
+		case GIVE_RESSOURCE:
+			return 5;
+		case HURT:
+			return 6;
+		case REPRODUCE:
+			return 7;
+		}
+		return -1;
 	}
 	
 }

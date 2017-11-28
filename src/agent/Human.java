@@ -9,8 +9,6 @@ import agent.Sex;
 
 import java.util.ArrayList;
 
-import action.Collect_Food;
-import action.ParentAction;
 import data.DataManagement;
 
 public class Human extends Randomized{
@@ -51,7 +49,6 @@ public class Human extends Randomized{
 	public int x,y;
 	public Vector dir;
 	
-	ParentAction currentAction;
 	
 	public Human(){
 		this.sex = Sex.values()[local_random.nextInt(Sex.values().length)];
@@ -69,17 +66,6 @@ public class Human extends Randomized{
 		this.sex = sex;
 		this.culture = culture;
 	}
-
-	public void take_action(){
-		//TODO maybe switch over Action enum and set current Action
-		currentAction = new Collect_Food();
-	}
-	
-	public void executeAction(){
-		take_action();
-		currentAction.execute(this);
-	}
-	
 	
 	//Reflexes actions and update Attribute
 	public void update(){
@@ -108,8 +94,17 @@ public class Human extends Randomized{
 		this.currentCase = DataManagement.terrain.getCase(x, y);
 		this.currentCase.humans.add(this);
 		update_genre();
+		update_tribe_frame_datas();
 	}
 	
+	private void update_tribe_frame_datas() {
+		if(this.energy<=0) {
+			this.tribe.currentFrame.food += this.food;
+			this.tribe.currentFrame.ressource += this.ressource;
+			this.tribe.currentFrame.tribus_size ++;
+		}
+	}
+
 	private void update_genre(){
 		switch(this.sex){
 		case CHILDREN_1:

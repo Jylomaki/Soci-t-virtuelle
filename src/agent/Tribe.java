@@ -3,10 +3,11 @@ package agent;
 import java.awt.Color;
 import java.util.ArrayList;
 
+import data.Frame_data;
+import data.Tracked_Datas;
 import genome.Behaviour_Automata;
 import genome.Communication_Automata;
 import global.Randomized;
-import global.Tracked_Datas;
 
 public class Tribe extends Randomized {
 	int size;
@@ -14,7 +15,8 @@ public class Tribe extends Randomized {
 	Color color;
 	int spawnX,spawnY;
 	public ArrayList<Human> living_humans;
-	Tracked_Datas tracked_datas;
+	public Tracked_Datas tracked_datas;
+	public Frame_data currentFrame;
 	// vhen size reach max instansiation tribu size, back up the live human of this tribe
 	// Nape, not with the same 
 	
@@ -49,6 +51,8 @@ public class Tribe extends Randomized {
 		do{
 			this.cA_S2 = new Communication_Automata();
 		}while(!this.A_S1.is_Valid());
+		this.tracked_datas = new Tracked_Datas();
+		this.currentFrame = new Frame_data();
 	}
 	
 	public Behaviour_Automata get_adequate_Automata(Human h, boolean handle_com){
@@ -73,6 +77,11 @@ public class Tribe extends Randomized {
 			System.err.println("Tribe: get adequate automate: could not resovle sex");
 			return null;
 		}
+	}
+	
+	
+	public void update_datas() {
+		
 	}
 	
 	public int getSize() {
