@@ -15,8 +15,10 @@ public class Human extends Randomized{
 	//static information
 	static final int MUST_EAT = 200;
 	static final int ENERGY_RESTITUTION = 200;
+	static final int FOOD_EAT = 1;
 	static final int adult_age = 1000;
 	static final int birth_energy = 200;
+	static final int settlement_energy_loss_advantage = 15;
 
 	
 	//comportement information
@@ -35,7 +37,7 @@ public class Human extends Randomized{
 	public Case currentCase;
 	
 	//Communication used datas
-	public int interlocutor_id;
+	public Human interlocutor;
 	public ArrayList<Integer> liked_list;
 	public enum Communication_Status{//SET THIS VAR AT THE BEGINING OF A COM
 		BEGIN,
@@ -47,6 +49,7 @@ public class Human extends Randomized{
 	
 	//spatial information
 	public int x,y;
+	public int dst_x, dst_y;
 	public Vector dir;
 	
 	
@@ -55,6 +58,7 @@ public class Human extends Randomized{
 		dir = new Vector(100,100);
 		this.age = 0;
 		this.energy = birth_energy;
+		this.genomalVariables = new Genomal_Variables();
 		id = id_count++;
 	}
 	
@@ -69,6 +73,9 @@ public class Human extends Randomized{
 	public Human offspring() {
 		System.out.println("HALLELUYA A CHILD IS BORN");
 		Human offspring = new Human();
+		//TODO add mutation factor on culture
+		offspring.culture = this.culture;
+		
 		offspring.tribe = this.tribe;
 		this.tribe.living_humans.add(offspring);
 		
@@ -81,10 +88,18 @@ public class Human extends Randomized{
 	//Reflexes actions and update Attribute
 	public void update(){
 		age++;
+		energy_update();
+		update_genre();
+		update_tribe_frame_datas();
+	}
+	
+	private void energy_update(){
 		//System.out.println(energy);
+		if(this.currentCase.settlement_present())
+			energy += settlement_energy_loss_advantage;
 		energy -= (age/100);
 		while(energy<=MUST_EAT && food>0){
-			food--;
+			food-= FOOD_EAT;
 			energy += ENERGY_RESTITUTION;
 		}
 		if(energy<=0){//DIE
@@ -94,6 +109,9 @@ public class Human extends Randomized{
 			if(this.ressource > 0)
 				DataManagement.terrain.getCase(x, y).corpse_ressource += this.ressource;
 		}
+	}
+	
+	public void move(){
 		this.currentCase.humans.remove(this);
 		wiggle();
 		x = (int) ((x+(dir.x/100))%DataManagement.TerrainGridX);
@@ -104,9 +122,8 @@ public class Human extends Randomized{
 			y = DataManagement.TerrainGridY-1;
 		this.currentCase = DataManagement.terrain.getCase(x, y);
 		this.currentCase.humans.add(this);
-		update_genre();
-		update_tribe_frame_datas();
 	}
+	
 	
 	private void update_tribe_frame_datas() {
 		if(this.energy<=0) {
@@ -168,9 +185,12 @@ public class Human extends Randomized{
 	}
 
 	public boolean does_like_interlocutor() {
-		if(this.liked_list.contains(this.interlocutor_id))
-			return true;
-		// TODO access to check the culture distance
-		return false;
+		return Math.abs(this.culture - this.interlocutor.culture) <= global.Global_variables.like_max_cultural_distance; 
+	}
+
+	public void collecte_corpse(int corpse_food, int corpse_ressource) {
+		this.food+= corpse_food;
+		this.ressource += corpse_ressource;
+		
 	}
 }

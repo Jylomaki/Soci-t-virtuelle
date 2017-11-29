@@ -1,6 +1,7 @@
 package genome.transition;
 
 import agent.Human;
+import data.DataManagement;
 import global.Mutable;
 import global.Randomized;
 import global.local_random;
@@ -8,7 +9,9 @@ import global.local_random;
 public class Modification extends Randomized implements Mutable{
 	private enum Type{
 		EQ,
-		INCR
+		INCR,
+		SET_DST_X,
+		SET_DST_Y,
 	}
 	
 	private static int max_Id=64;
@@ -40,16 +43,20 @@ public class Modification extends Randomized implements Mutable{
 			switch(type){
 			case EQ:
 				agent.genomalVariables.set(id, expr.evaluate(agent));
-				next_mod.execute(agent);
 				break;
 			case INCR:
 				agent.genomalVariables.set(id, expr.evaluate(agent) + agent.genomalVariables.get(id));
-				next_mod.execute(agent);
+				break;
+			case SET_DST_X:
+				agent.dst_x = expr.evaluate(agent) % DataManagement.TerrainGridX;
+				break;
+			case SET_DST_Y:
+				agent.dst_y = expr.evaluate(agent) % DataManagement.TerrainGridY;
 				break;
 			default:
-				break;
-	
+				break;	
 			}
+			next_mod.execute(agent);
 		}
 	}
 

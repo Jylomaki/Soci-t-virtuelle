@@ -72,13 +72,14 @@ public class Action{
 			interlocutor.energy -= global.Global_variables.hurt_energy_deplete;
 			break;
 		case MOVE:
+			perpetrator.move();
 			break;
 		case REPRODUCE:
-			//TODO
 			perpetrator.reproduce(interlocutor);
 			break;
 		case SETTLEMENT:
-			
+			perpetrator.currentCase.settlement += perpetrator.ressource;
+			perpetrator.ressource =0;
 			break;
 		default:
 			break;

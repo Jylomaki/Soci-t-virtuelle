@@ -4,5 +4,6 @@ public enum Terrain_Value {
 	RESSOURCE,
 	SETTLEMENT,
 	FOOD,
-	CORPSE
+	CORPSE,
+	OTHER_HUMAN,
 }

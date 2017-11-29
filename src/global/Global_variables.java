@@ -9,4 +9,5 @@ public class Global_variables {
 	public static int settlement_decay_rate = 1;
 	public static int like_max_cultural_distance = 50;
 	public static int interaction_max=5;
+	public static int corpse_decay_rate = 5;
 }

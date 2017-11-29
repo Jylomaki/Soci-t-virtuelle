@@ -25,6 +25,8 @@ public class Case {
 	public int settlement;
 	public int corpse_food;
 	public int corpse_ressource;
+	public boolean corpse_presence;
+	private static final int settlement_food_gather_advantage=15;
 	
 	private static int foodMax = 100;
 	private static int ressourceMax = 100;
@@ -64,19 +66,20 @@ public class Case {
 	}
 
 	public void update(){
+		this.update_corpse_presence();
 		switch(type){
 		case FOOD:
 			if(food<foodMax){
 				food++;
 				color = new Color(0,Math.max(food,0),0);
 			}
-		break;
+			break;
 		case RESSOURCE:
 			if(ressource<ressourceMax){
 				ressource++;
 				color = new Color(0,0,Math.max(ressource,0));
 			}
-		break;
+			break;
 		case FR:
 			if(food<foodMax){
 				food++;
@@ -86,9 +89,9 @@ public class Case {
 				
 			}
 			color = new Color(0,Math.max(food,0),Math.max(ressource,0));
-		break;
+			break;
 		case EMPTY:
-		break;
+			break;
 		}
 		if(this.settlement_present()){
 			this.settlement -= global.Global_variables.settlement_decay_rate;
@@ -106,6 +109,8 @@ public class Case {
 			//System.out.println("CASE: Updated a human, human on case:" + humans.size());
 			humans.get(j).update();
 		}
+		if(humans.size()>0)
+			collect_corpse();
 		
 		while(i< this.humans.size()) {
 			if(this.humans.size()-i >=2) {
@@ -115,6 +120,8 @@ public class Case {
 				Human h1 = this.humans.get(i);
 				h1.comStatus = Human.Communication_Status.BEGIN;
 				Human h2 = this.humans.get(i);
+				h1.interlocutor = h2;
+				h2.interlocutor = h1;
 				boolean ignored_both;
 				int interaction_count = 0;
 				do{
@@ -144,6 +151,11 @@ public class Case {
 		}
 	}
 	
+	private void collect_corpse(){
+		humans.get(0).collecte_corpse(this.corpse_food, this.corpse_ressource);
+		this.corpse_food=0;
+		this.corpse_ressource=0;
+	}
 	public Color getColor() {
 		return color;
 	}
@@ -177,6 +189,8 @@ public class Case {
 	public int gatherFood(){
 		if(food > 0){
 			int retour = food;
+			if(this.settlement_present())
+				retour += settlement_food_gather_advantage;
 			food -= foodMax;
 			color = new Color(0,Math.max(food,0),Math.max(ressource,0));
 			return retour;
@@ -229,8 +243,19 @@ public class Case {
 
 	}
 
+	public void update_corpse_presence(){
+		if(this.corpse_presence){
+			this.corpse_food = Math.min(this.corpse_food-global.Global_variables.corpse_decay_rate, 0);
+			this.corpse_ressource = Math.min(this.corpse_ressource-global.Global_variables.corpse_decay_rate, 0);
+		}
+		this.corpse_presence = this.corpse_food>0 || this.corpse_ressource>0;
+	}
+	
+	public boolean human_presence(){
+		return this.humans.size()>=2;
+	}
 	public boolean corpse_present() {
-		return this.corpse_food>0 || this.corpse_ressource>0;
+		return this.corpse_presence;
 
 	}
 	

@@ -56,6 +56,10 @@ public class Tribe extends Randomized {
 	}
 	
 	public Behaviour_Automata get_adequate_Automata(Human h, boolean handle_com){
+		if(handle_com)
+			return this.cA_S1;
+		return this.A_S1;
+		/*
 		switch(h.sex){
 		case CHILDREN_1:
 			if(handle_com)
@@ -76,7 +80,7 @@ public class Tribe extends Randomized {
 		default:
 			System.err.println("Tribe: get adequate automate: could not resovle sex");
 			return null;
-		}
+		}*/
 	}
 	
 	
