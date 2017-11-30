@@ -26,7 +26,6 @@ public class Case {
 	public int corpse_food;
 	public int corpse_ressource;
 	public boolean corpse_presence;
-	private static final int settlement_food_gather_advantage=15;
 	
 	private static int foodMax = 100;
 	private static int ressourceMax = 100;
@@ -36,9 +35,9 @@ public class Case {
 	
 	
 	
-	static final int percentageFood = 2;
-	static final int percentageRessource = 2;
-	static final int percentageFR = 1;
+	static final int percentageFood = global.Global_variables.percentageFood;
+	static final int percentageRessource = global.Global_variables.percentageRessource;
+	static final int percentageFR = global.Global_variables.percentageBoth;
 	
 	public Case(){
 		Random random = new Random();
@@ -190,7 +189,7 @@ public class Case {
 		if(food > 0){
 			int retour = food;
 			if(this.settlement_present())
-				retour += settlement_food_gather_advantage;
+				;//retour += settlement_food_gather_advantage;
 			food -= foodMax;
 			color = new Color(0,Math.max(food,0),Math.max(ressource,0));
 			return retour;

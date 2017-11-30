@@ -5,5 +5,7 @@ public enum Agent_Value {
 	SEXE,
 	FOOD,
 	RESSOURCE,
-	AGE
+	AGE,
+	X,
+	Y
 }

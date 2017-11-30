@@ -3,8 +3,6 @@ package genome;
 import global.Mutable;
 import global.Randomized;
 
-import java.util.ArrayList;
-
 public class Genomal_Variables extends Randomized implements Mutable {
 	public int maxVar=64;
 	int vars[];

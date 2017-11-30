@@ -24,7 +24,6 @@ public class Human extends Randomized{
 	//comportement information
 	public Tribe tribe;// reference to tribe to access the shared automatas
 	public Behaviour_Automata behaviour_automata;
-	public Communication_Automata communication_automata;
 	public Genomal_Variables genomalVariables;
 	
 	static long id_count=0;
@@ -60,7 +59,9 @@ public class Human extends Randomized{
 		this.energy = birth_energy;
 		this.genomalVariables = new Genomal_Variables();
 		id = id_count++;
-	}
+		this.dst_x=-1;
+		this.dst_y=-1;
+		}
 	
 	public Human(int food, int ressource, Sex sex, int culture) {
 		this();
@@ -71,7 +72,7 @@ public class Human extends Randomized{
 	}
 	
 	public Human offspring() {
-		System.out.println("HALLELUYA A CHILD IS BORN");
+		//System.out.println("birth" + this.tribe.getSize());
 		Human offspring = new Human();
 		//TODO add mutation factor on culture
 		offspring.culture = this.culture;
@@ -108,25 +109,54 @@ public class Human extends Randomized{
 				DataManagement.terrain.getCase(x, y).corpse_food += this.food;
 			if(this.ressource > 0)
 				DataManagement.terrain.getCase(x, y).corpse_ressource += this.ressource;
+			this.tribe.living_humans.remove(this);
 		}
 	}
 	
 	public void move(){
+		boolean random = this.random_destination();
 		this.currentCase.humans.remove(this);
-		wiggle();
-		x = (int) ((x+(dir.x/100))%DataManagement.TerrainGridX);
-		y = (int) ((y+(dir.y/100))%DataManagement.TerrainGridY);
+		Vector v = this.find_shortest_route_to_dst();
+		int x = (int)v.x+this.x;
+		int y = (int)v.y+this.y;
 		if(x<0)
 			x = DataManagement.TerrainGridX-1;
 		if(y<0)
 			y = DataManagement.TerrainGridY-1;
 		this.currentCase = DataManagement.terrain.getCase(x, y);
 		this.currentCase.humans.add(this);
+		if(random)
+			this.reset_random_dst();
 	}
 	
+	private Vector find_shortest_route_to_dst() {
+		Vector r = new Vector();
+		int dX_direct = this.dst_x - this.x;
+		int dX_reverse = this.dst_x - (this.x + DataManagement.TerrainGridX);
+		if(Math.abs(dX_direct) < dX_reverse)
+			r.x = dX_direct;
+		else
+			r.x = dX_reverse;
+		int dy_direct = this.dst_y - this.y;
+		int dy_reverse = this.dst_y - (this.y + DataManagement.TerrainGridY);
+		if(Math.abs(dy_direct) < dy_reverse)
+			r.y = dy_direct;
+		else
+			r.y = dy_reverse;
+		
+		if(r.x<0)
+			r.x = -1;
+		else
+			r.x = 1;
+		if(r.y<0)
+			r.y=-1;
+		else
+			r.y=1;
+		return r;
+	}
 	
 	private void update_tribe_frame_datas() {
-		if(this.energy<=0) {
+		if(this.energy>=0) {
 			this.tribe.currentFrame.food += this.food;
 			this.tribe.currentFrame.ressource += this.ressource;
 			this.tribe.currentFrame.tribus_size ++;
@@ -163,7 +193,23 @@ public class Human extends Randomized{
 		dir.rotate(tl);
 	}
 	
+	private boolean random_destination() {
+		if(this.dst_x == -1 && this.dst_y ==-1)
+		{
+			this.dst_x = local_random.nextInt(DataManagement.TerrainGridX);
+			this.dst_y = local_random.nextInt(DataManagement.TerrainGridY);
+			return true;
+		}
+		return false;
+	}
+	
+	private void reset_random_dst() {
+		this.dst_x=-1;
+		this.dst_y=-1;
+	}
 	public boolean parenting_ok(Human h){
+		if(this.currentCase.humans.size()> 10)
+			return false;
 		switch(this.sex){
 		case S1:
 			if(h.sex == Sex.S2)

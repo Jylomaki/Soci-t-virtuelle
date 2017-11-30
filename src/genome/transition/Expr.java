@@ -81,6 +81,10 @@ public class Expr extends Randomized implements Mutable{
 					break;
 				
 				}
+			case X:
+				return agent.x;
+			case Y:
+				return agent.y;
 			default:
 				break;
 			

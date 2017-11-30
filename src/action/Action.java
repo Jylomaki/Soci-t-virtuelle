@@ -4,7 +4,7 @@ import agent.Human;
 import terrain.Case;
 
 public class Action{
-	private static final int cooperation_overflow = 5;
+	private static final int cooperation_overflow = global.Global_variables.cooperation_give_advantage;
 	private static final int cooperation_give = 100;
 	public enum Type{
 		//solo actions
