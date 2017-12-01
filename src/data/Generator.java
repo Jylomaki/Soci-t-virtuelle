@@ -5,8 +5,10 @@ import java.util.Random;
 
 import agent.Human;
 import agent.Tribe;
+import global.Randomized;
+import global.local_random;
 
-public class Generator{
+public class Generator extends Randomized{
 
 	static final int NOMBER_TRIBE = 3;
 	static final int MAX_TRIBE_SIZE = 10;
@@ -30,13 +32,13 @@ public class Generator{
 	}
 	
 	public static Human generateHuman(Tribe tribe){
-		Random random = new Random();
+		
 		Human human = new Human();
-		human.x = (tribe.getSpawnX() + random.nextInt(10))%DataManagement.TerrainGridX;
-		human.y = (tribe.getSpawnY() + random.nextInt(10))%DataManagement.TerrainGridY;
+		human.x = (tribe.getSpawnX() + local_random.nextInt(10))%DataManagement.TerrainGridX;
+		human.y = (tribe.getSpawnY() + local_random.nextInt(10))%DataManagement.TerrainGridY;
 		human.age = 0;
-		human.energy = random.nextInt(200) + 600;
-		human.culture = random.nextInt(10);
+		human.energy = local_random.nextInt(200) + 600;
+		human.culture = local_random.nextInt(10);
 		human.food = 1;
 		human.tribe=tribe;
 		tribe.living_humans.add(human);

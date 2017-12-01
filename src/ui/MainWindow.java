@@ -66,7 +66,7 @@ public class MainWindow extends JFrame {
 		
 		add(renderer,BorderLayout.CENTER);
 		
-		int delay = 16;
+		int delay = 60;
 		ActionListener taskPerformer = new ActionListener() {
 			public void actionPerformed(ActionEvent evt) {
 				if(simulationHaveBeenRun)
