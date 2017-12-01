@@ -117,9 +117,9 @@ public class Human extends Randomized{
 		boolean random = this.random_destination();
 		this.currentCase.humans.remove(this);
 		Vector v = this.find_shortest_route_to_dst();
-		System.out.println("Human: Moving: actual ("+ this.x + "," + this.y +") ");
-		System.out.println("DST: ("+ this.dst_x +","+ this.dst_y +",RNG?" + random +") ");
-		System.out.println("DirVec:(" + v.x + "," + v.y +")" );
+		//System.out.println("Human: Moving: actual ("+ this.x + "," + this.y +") ");
+		//System.out.println("DST: ("+ this.dst_x +","+ this.dst_y +",RNG?" + random +") ");
+		//System.out.println("DirVec:(" + v.x + "," + v.y +")" );
 		this.x = (int)v.x+this.x;
 		this.y = (int)v.y+this.y;
 		//System.out.println("Human moving: new pos: (" + this.x +", "+ this.y +")" );
@@ -137,13 +137,13 @@ public class Human extends Randomized{
 		Vector r = new Vector();
 		int dX_direct = this.dst_x - this.x;
 		int dX_reverse = this.dst_x - (this.x + DataManagement.TerrainGridX);
-		if(Math.abs(dX_direct) < dX_reverse)
+		if(Math.abs(dX_direct) < Math.abs(dX_reverse))
 			r.x = dX_direct;
 		else
 			r.x = dX_reverse;
 		int dy_direct = this.dst_y - this.y;
 		int dy_reverse = this.dst_y - (this.y + DataManagement.TerrainGridY);
-		if(Math.abs(dy_direct) < dy_reverse)
+		if(Math.abs(dy_direct) < Math.abs(dy_reverse))
 			r.y = dy_direct;
 		else
 			r.y = dy_reverse;
@@ -157,7 +157,11 @@ public class Human extends Randomized{
 			r.y=-1;
 		else
 			r.y=1;
-		System.out.println("");
+		System.out.println("POS: ( " + this.x + "," + this.y + ")");
+		System.out.println("DST: (" + this.dst_x + "," + this.dst_y + "(");
+		System.out.println("Deltas: direct: ( "+ dX_direct + "," + dy_direct + ")");
+		System.out.println("Deltas: reverse: ("+ dX_reverse + "," + dy_reverse +")");
+		System.out.println("R: (" + r.x + "," + r.y +")");
 		return r;
 	}
 	
