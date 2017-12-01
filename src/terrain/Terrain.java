@@ -20,6 +20,16 @@ public class Terrain {
 			}
 		}
 	}
+	
+	public void regenerate(){
+		grid = new ArrayList<ArrayList<Case>>();
+		for(int i=0;i<DataManagement.TerrainGridX;i++){
+			grid.add(new ArrayList<Case>());
+			for(int j=0;j<DataManagement.TerrainGridY;j++){
+				grid.get(i).add(new Case());
+			}
+		}
+	}
 
 	public int getWidth() {
 		return width;

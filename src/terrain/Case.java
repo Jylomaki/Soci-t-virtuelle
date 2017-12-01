@@ -6,6 +6,7 @@ import java.util.Random;
 
 import action.Action;
 import agent.Human;
+import global.Global_variables;
 
 public class Case {
 
@@ -35,22 +36,20 @@ public class Case {
 	
 	
 	
-	static final int percentageFood = global.Global_variables.percentageFood;
-	static final int percentageRessource = global.Global_variables.percentageRessource;
-	static final int percentageFR = global.Global_variables.percentageBoth;
+
 	
 	public Case(){
 		Random random = new Random();
 		int rand = random.nextInt(foodMax);
-		if(rand<=percentageFood){
+		if(rand<Global_variables.percentageFood){
 			food = random.nextInt(foodMax);
 			color = new Color(0,food,0);
 			type = TypeCase.FOOD;
-		}else if(rand<=percentageFood+percentageRessource){
+		}else if(rand<Global_variables.percentageFood+Global_variables.percentageRessource){
 			ressource = random.nextInt(ressourceMax);
 			color = new Color(0,0,ressource);
 			type = TypeCase.RESSOURCE;
-		}else if(rand<=percentageFood+percentageRessource+percentageFR){
+		}else if(rand<Global_variables.percentageFood+Global_variables.percentageRessource+Global_variables.percentageBoth){
 			food = random.nextInt(foodMax);
 			ressource = random.nextInt(ressourceMax);
 			color = new Color(0,food,ressource);

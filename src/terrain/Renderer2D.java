@@ -21,12 +21,16 @@ public class Renderer2D extends JComponent{
 	private Terrain terrain;
 	private int frame_count;
 	private static final int frame_checkup = 100;
+	int xPoints[];
+	int yPoints[];
 	
 	public Renderer2D(int width,int height,Terrain terrain){
 		super();
 		this.width = width;
 		this.height = height;
 		this.terrain = terrain;
+		xPoints = new int[3];
+		yPoints = new int[3];
 	}
 	
 	private void cleanUp(){
@@ -47,10 +51,19 @@ public class Renderer2D extends JComponent{
 				terrain.getCase(i, j).update();
 				g2d.setColor(terrain.getCase(i, j).getColor());
 				g2d.fillRect(i*caseWidth,j*caseHeight,caseWidth,caseHeight);
+				if(terrain.getCase(i, j).settlement_present()){
+					g2d.setColor(Color.WHITE);
+					xPoints[0] = i*caseWidth;
+					xPoints[1] = i*caseWidth+caseWidth/2;
+					xPoints[2] = i*caseWidth+caseWidth;
+					yPoints[0] = j*caseHeight;
+					yPoints[1] = j*caseHeight+caseWidth;
+					yPoints[2] = j*caseHeight;
+					g2d.drawPolygon(xPoints, yPoints, 3);
+				}
 			}
 		}
-		/*Settlement Rendering*/
-
+		
 		
 		/*Human Rendering*/
 		boolean extinction=true;
