@@ -117,9 +117,9 @@ public class Human extends Randomized{
 		boolean random = this.random_destination();
 		this.currentCase.humans.remove(this);
 		Vector v = this.find_shortest_route_to_dst();
-		//System.out.println("Human: Moving: actual ("+ this.x + "," + this.y +") "
-		//		+ "DST: ("+ this.dst_x +","+ this.dst_y +",RNG?" + random +") "
-		//		+ "DirVec:(" + v.x + "," + v.y +")" );
+		System.out.println("Human: Moving: actual ("+ this.x + "," + this.y +") ");
+		System.out.println("DST: ("+ this.dst_x +","+ this.dst_y +",RNG?" + random +") ");
+		System.out.println("DirVec:(" + v.x + "," + v.y +")" );
 		this.x = (int)v.x+this.x;
 		this.y = (int)v.y+this.y;
 		//System.out.println("Human moving: new pos: (" + this.x +", "+ this.y +")" );
@@ -152,10 +152,12 @@ public class Human extends Randomized{
 			r.x = -1;
 		else
 			r.x = 1;
+		
 		if(r.y<0)
 			r.y=-1;
 		else
 			r.y=1;
+		System.out.println("");
 		return r;
 	}
 	
