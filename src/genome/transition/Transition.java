@@ -2,7 +2,6 @@ package genome.transition;
 
 import global.Mutable;
 import global.Randomized;
-import global.local_random;
 
 public class Transition extends Randomized implements Mutable{
 	public int starting_state;

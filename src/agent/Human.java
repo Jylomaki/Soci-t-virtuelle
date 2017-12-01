@@ -117,8 +117,12 @@ public class Human extends Randomized{
 		boolean random = this.random_destination();
 		this.currentCase.humans.remove(this);
 		Vector v = this.find_shortest_route_to_dst();
-		int x = (int)v.x+this.x;
-		int y = (int)v.y+this.y;
+		//System.out.println("Human: Moving: actual ("+ this.x + "," + this.y +") "
+		//		+ "DST: ("+ this.dst_x +","+ this.dst_y +",RNG?" + random +") "
+		//		+ "DirVec:(" + v.x + "," + v.y +")" );
+		this.x = (int)v.x+this.x;
+		this.y = (int)v.y+this.y;
+		//System.out.println("Human moving: new pos: (" + this.x +", "+ this.y +")" );
 		if(x<0)
 			x = DataManagement.TerrainGridX-1;
 		if(y<0)
