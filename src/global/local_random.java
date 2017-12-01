@@ -21,5 +21,8 @@ public class local_random {
 		return r.nextInt(global.Global_variables.default_max_int);
 		//return 0;
 	}
+	public static float nextFloat() {
+		return r.nextFloat();
+	}
 
 }

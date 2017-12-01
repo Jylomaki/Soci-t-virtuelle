@@ -36,4 +36,21 @@ public class Frame_data {
 		for(int i=0; i<Action.interaction_max; i++)
 			this.interaction_performed[i]=0;
 	}
+	
+	public void add(Frame_data src){
+		this.food+=src.food;
+		this.ressource+=src.ressource;
+		this.craft_and_settlement+= src.craft_and_settlement;
+		this.tribus_size+= src.tribus_size;
+		this.ignorance_on_com+= src.ignorance_on_com;
+		
+		for(int i=0; i<Action.all_action_max; i++)
+			this.actions_performed[i]+= src.actions_performed[i];
+		
+		for(int i=0; i<Action.solo_action_max; i++)
+			this.soloaction_performed[i]+= src.soloaction_performed[i];
+		
+		for(int i=0; i<Action.interaction_max; i++)
+			this.interaction_performed[i]+=src.interaction_performed[i];
+	}
 }

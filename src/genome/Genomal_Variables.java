@@ -3,11 +3,9 @@ package genome;
 import global.Mutable;
 import global.Randomized;
 
-import java.util.ArrayList;
-
 public class Genomal_Variables extends Randomized implements Mutable {
 	public int maxVar=64;
-	ArrayList<Integer> vars;
+	int vars[];
 	
 	
 	@Override
@@ -23,7 +21,7 @@ public class Genomal_Variables extends Randomized implements Mutable {
 	 * @param evaluate
 	 */
 	public void set(Integer id, int evaluate) {
-		vars.set(id,evaluate);
+		vars[id]=evaluate;
 	}
 	
 	public Genomal_Variables clone(){
@@ -32,12 +30,12 @@ public class Genomal_Variables extends Randomized implements Mutable {
 	
 	public Genomal_Variables() {
 		super();
-		vars = new ArrayList<Integer>();
+		vars = new int[maxVar];
 	}
 
 
 	public int get(int id){
-		return vars.get(id);
+		return vars[id];
 	}
 
 

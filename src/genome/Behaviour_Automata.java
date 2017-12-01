@@ -54,21 +54,6 @@ public class Behaviour_Automata extends Randomized implements Mutable {
 	}
 
 
-	public Action.Type evaluate(Human agent){
-		int current_state=0;
-		while(! is_final_state(current_state)) {
-			current_state = this.execute_transition(current_state,agent);
-		}
-		//vhen in a non final state, check for outvard transition
-		// if cond true, do transition
-		// if no cond true, do id 0 of transition from state
-		Action.Type retour_action = Action.Type.values()[current_state-1]; 
-		if(this.handle_communication == false && !Action.actionIgnoring(retour_action))	
-			System.err.println("Behaviour automata: solo automata returning interaction action" + retour_action);
-		return Action.Type.values()[current_state-1];
-	}
-
-
 	//check for loops, and well-states
 	// all reachable states must be able to reach a end-state
 	// no state must be able to reach itself
@@ -80,10 +65,28 @@ public class Behaviour_Automata extends Randomized implements Mutable {
 		return true;
 	}
 	
+	public Action.Type evaluate(Human agent){
+		int current_state=0;
+		while(! is_final_state(current_state)) {
+			int next_state = this.execute_transition(current_state,agent);
+			if(next_state == current_state)
+				System.err.println("Automate evaluate error: looping transition");
+			current_state = next_state; 
+		}
+		//vhen in a non final state, check for outvard transition
+		// if cond true, do transition
+		// if no cond true, do id 0 of transition from state
+		Action.Type retour_action = Action.Type.values()[current_state-1]; 
+		if(this.handle_communication == false && !Action.actionIgnoring(retour_action))	
+			System.err.println("Behaviour automata: solo automata returning interaction action" + retour_action);
+		return Action.Type.values()[current_state-1];
+	}
+
 	@Override
 	public boolean mutate(int treshold, int maxR) {
+		Behaviour_Automata b_up = this.clone();
+		int target_state=-1;
 		this.has_mutated = false;
-		//TODO add remove state, and/or remove transition (degenerative mutations)
 		
 		//Mutate transition table
 		for(int i=0; i< maxNode; i++) {
@@ -95,7 +98,7 @@ public class Behaviour_Automata extends Randomized implements Mutable {
 		
 		//Remove state
 		while(local_random.nextInt(maxR)<treshold) {
-			int target_state = local_random.nextInt(this.maxNode-1)+1;
+			target_state = local_random.nextInt(this.maxNode-1)+1;
 			if(!this.is_final_state(target_state)) {
 				has_mutated = true;
 				// chose state, by pass all transition that go into that state
@@ -116,6 +119,11 @@ public class Behaviour_Automata extends Randomized implements Mutable {
 				// remove state
 				automata.remove(target_state);
 				this.maxNode--;
+				boolean validity= this.is_Valid();
+				assert(validity);
+				if(!validity) {
+					System.err.println("Beha Auto: Mutating, suppressed a state, no longer valid automata");
+				}
 			}
 		}
 		
@@ -130,7 +138,13 @@ public class Behaviour_Automata extends Randomized implements Mutable {
 			has_mutated=true;
 			this.add_transition(treshold, maxR);
 		}
-		assert(is_Valid());
+		
+		boolean validity= is_Valid();
+		assert(validity);
+		if(!validity ){
+			System.err.println("Mutated, it is not valid  mutated:" + this.has_mutated);
+			b_up.print();
+		}
 		return has_mutated;
 	}
 
@@ -210,17 +224,13 @@ public class Behaviour_Automata extends Randomized implements Mutable {
 			// Add all non-visited states to current states
 			for(int i = 0; i< this.automata.get(current_state).size(); i++) {
 				Transition trans= automata.get(current_state).get(i);
-				if(i == trans.starting_state ) {
-					if(begin_state== trans.ending_state) {
-						//System.out.println("Beha_auto: found a looping state");
-						return false;//looping
-					}
-					if(!visited_states.contains(trans.ending_state)) {
-						current_states.add(trans.ending_state);
-						visited_states.add(trans.ending_state);
-					}
-					
-				}			
+				if(begin_state== trans.ending_state)
+					return false;//looping
+				if(!visited_states.contains(trans.ending_state)) {
+					current_states.add(trans.ending_state);
+					visited_states.add(trans.ending_state);
+				}
+				
 			}
 		}
 		// does it reach a final state?
@@ -284,9 +294,9 @@ public class Behaviour_Automata extends Randomized implements Mutable {
 			while( this.is_final_state(begin_state))//no transition shall begin on a final state
 				begin_state = local_random.nextInt(maxNode);
 			
-			end_state = local_random.nextInt(maxNode);
+			end_state = local_random.nextInt(maxNode-1)+1;
 			while(begin_state==end_state)// no transition can stay on one state
-				end_state = local_random.nextInt(maxNode);
+				end_state = local_random.nextInt(maxNode-1)+1;
 			
 			automata.get(begin_state).add(new Transition(begin_state,end_state, treshold, maxR, handle_communication));
 			

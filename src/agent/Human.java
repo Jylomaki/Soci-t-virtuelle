@@ -15,27 +15,28 @@ public class Human extends Randomized{
 	//static information
 	static final int MUST_EAT = 200;
 	static final int ENERGY_RESTITUTION = 200;
+	static final int FOOD_EAT = 1;
 	static final int adult_age = 1000;
 	static final int birth_energy = 200;
+	static final int settlement_energy_loss_advantage = 15;
 
 	
 	//comportement information
 	public Tribe tribe;// reference to tribe to access the shared automatas
 	public Behaviour_Automata behaviour_automata;
-	public Communication_Automata communication_automata;
 	public Genomal_Variables genomalVariables;
 	
 	static long id_count=0;
 	
 	//Status datas
-	public long id, group_id;
+	public long id;
 	public int energy, age, food, ressource;
 	public Sex sex;
 	public int culture;
 	public Case currentCase;
 	
 	//Communication used datas
-	public int interlocutor_id;
+	public Human interlocutor;
 	public ArrayList<Integer> liked_list;
 	public enum Communication_Status{//SET THIS VAR AT THE BEGINING OF A COM
 		BEGIN,
@@ -47,33 +48,59 @@ public class Human extends Randomized{
 	
 	//spatial information
 	public int x,y;
+	public int dst_x, dst_y;
 	public Vector dir;
 	
 	
 	public Human(){
 		this.sex = Sex.values()[local_random.nextInt(Sex.values().length)];
 		dir = new Vector(100,100);
-		id = id_count++;
-	}
-	
-	public Human(long group_id, int food, int ressource, Sex sex, int culture) {
-		super();
-		this.group_id = group_id;
-		this.energy = birth_energy;
 		this.age = 0;
+		this.energy = birth_energy;
+		this.genomalVariables = new Genomal_Variables();
+		id = id_count++;
+		this.dst_x=-1;
+		this.dst_y=-1;
+		}
+	
+	public Human(int food, int ressource, Sex sex, int culture) {
+		this();
 		this.food = food;
 		this.ressource = ressource;
 		this.sex = sex;
 		this.culture = culture;
 	}
 	
+	public Human offspring() {
+		//System.out.println("birth" + this.tribe.getSize());
+		Human offspring = new Human();
+		//TODO add mutation factor on culture
+		offspring.culture = this.culture;
+		
+		offspring.tribe = this.tribe;
+		this.tribe.living_humans.add(offspring);
+		
+		offspring.currentCase = this.currentCase;
+		currentCase.humans.add(offspring);
+		this.tribe.mutate_autos();
+		return offspring;
+	}
+	
 	//Reflexes actions and update Attribute
 	public void update(){
 		age++;
+		energy_update();
+		update_genre();
+		update_tribe_frame_datas();
+	}
+	
+	private void energy_update(){
 		//System.out.println(energy);
+		if(this.currentCase.settlement_present())
+			energy += settlement_energy_loss_advantage;
 		energy -= (age/100);
 		while(energy<=MUST_EAT && food>0){
-			food--;
+			food-= FOOD_EAT;
 			energy += ENERGY_RESTITUTION;
 		}
 		if(energy<=0){//DIE
@@ -82,23 +109,64 @@ public class Human extends Randomized{
 				DataManagement.terrain.getCase(x, y).corpse_food += this.food;
 			if(this.ressource > 0)
 				DataManagement.terrain.getCase(x, y).corpse_ressource += this.ressource;
+			this.tribe.living_humans.remove(this);
 		}
+	}
+	
+	public void move(){
+		boolean random = this.random_destination();
 		this.currentCase.humans.remove(this);
-		wiggle();
-		x = (int) ((x+(dir.x/100))%DataManagement.TerrainGridX);
-		y = (int) ((y+(dir.y/100))%DataManagement.TerrainGridY);
+		Vector v = this.find_shortest_route_to_dst();
+		//System.out.println("Human: Moving: actual ("+ this.x + "," + this.y +") ");
+		//System.out.println("DST: ("+ this.dst_x +","+ this.dst_y +",RNG?" + random +") ");
+		//System.out.println("DirVec:(" + v.x + "," + v.y +")" );
+		this.x = (int)v.x+this.x;
+		this.y = (int)v.y+this.y;
+		//System.out.println("Human moving: new pos: (" + this.x +", "+ this.y +")" );
 		if(x<0)
 			x = DataManagement.TerrainGridX-1;
 		if(y<0)
 			y = DataManagement.TerrainGridY-1;
 		this.currentCase = DataManagement.terrain.getCase(x, y);
 		this.currentCase.humans.add(this);
-		update_genre();
-		update_tribe_frame_datas();
+		if(random)
+			this.reset_random_dst();
+	}
+	
+	private Vector find_shortest_route_to_dst() {
+		Vector r = new Vector();
+		int dX_direct = this.dst_x - this.x;
+		int dX_reverse = this.dst_x - (this.x + DataManagement.TerrainGridX);
+		if(Math.abs(dX_direct) < Math.abs(dX_reverse))
+			r.x = dX_direct;
+		else
+			r.x = dX_reverse;
+		int dy_direct = this.dst_y - this.y;
+		int dy_reverse = this.dst_y - (this.y + DataManagement.TerrainGridY);
+		if(Math.abs(dy_direct) < Math.abs(dy_reverse))
+			r.y = dy_direct;
+		else
+			r.y = dy_reverse;
+		
+		if(r.x<0)
+			r.x = -1;
+		else
+			r.x = 1;
+		
+		if(r.y<0)
+			r.y=-1;
+		else
+			r.y=1;
+		System.out.println("POS: ( " + this.x + "," + this.y + ")");
+		System.out.println("DST: (" + this.dst_x + "," + this.dst_y + "(");
+		System.out.println("Deltas: direct: ( "+ dX_direct + "," + dy_direct + ")");
+		System.out.println("Deltas: reverse: ("+ dX_reverse + "," + dy_reverse +")");
+		System.out.println("R: (" + r.x + "," + r.y +")");
+		return r;
 	}
 	
 	private void update_tribe_frame_datas() {
-		if(this.energy<=0) {
+		if(this.energy>=0) {
 			this.tribe.currentFrame.food += this.food;
 			this.tribe.currentFrame.ressource += this.ressource;
 			this.tribe.currentFrame.tribus_size ++;
@@ -116,7 +184,12 @@ public class Human extends Randomized{
 				this.sex = Sex.S2;
 			break;
 		case S1:
+			if(this.age < adult_age)
+				this.sex = Sex.CHILDREN_1;
+			break;
 		case S2:
+			if(this.age < adult_age)
+				this.sex = Sex.CHILDREN_2;
 		default:
 			break;
 		
@@ -130,7 +203,23 @@ public class Human extends Randomized{
 		dir.rotate(tl);
 	}
 	
+	private boolean random_destination() {
+		if(this.dst_x == -1 && this.dst_y ==-1)
+		{
+			this.dst_x = local_random.nextInt(DataManagement.TerrainGridX);
+			this.dst_y = local_random.nextInt(DataManagement.TerrainGridY);
+			return true;
+		}
+		return false;
+	}
+	
+	private void reset_random_dst() {
+		this.dst_x=-1;
+		this.dst_y=-1;
+	}
 	public boolean parenting_ok(Human h){
+		if(this.currentCase.humans.size()> 10)
+			return false;
 		switch(this.sex){
 		case S1:
 			if(h.sex == Sex.S2)
@@ -146,18 +235,18 @@ public class Human extends Randomized{
 		}
 	}
 	
-	public Human reproduce(Human h){
+	public void reproduce(Human h){
 		if(this.parenting_ok(h))
-		{
-			return new Human();
-		}
-		return null;
+			this.offspring();
 	}
 
 	public boolean does_like_interlocutor() {
-		if(this.liked_list.contains(this.interlocutor_id))
-			return true;
-		// TODO access to check the culture distance
-		return false;
+		return Math.abs(this.culture - this.interlocutor.culture) <= global.Global_variables.like_max_cultural_distance; 
+	}
+
+	public void collecte_corpse(int corpse_food, int corpse_ressource) {
+		this.food+= corpse_food;
+		this.ressource += corpse_ressource;
+		
 	}
 }

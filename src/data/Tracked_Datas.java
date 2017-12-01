@@ -15,6 +15,8 @@ public class Tracked_Datas {
 	public ArrayList<Integer> craft_and_settlement;
 	public ArrayList<Integer> tribus_size;
 	
+	public int last_frame=-1;
+	
 	public Tracked_Datas() {
 		this.actions_performed = list_of_list_cons(Action.all_action_max);
 		this.interaction_performed = list_of_list_cons(Action.interaction_max);
@@ -53,6 +55,15 @@ public class Tracked_Datas {
 		this.tribus_size.add(frame.tribus_size);
 		this.craft_and_settlement.add(frame.craft_and_settlement);
 		this.ignorance_on_com.add(frame.ignorance_on_com);
+		this.last_frame++;
+	}
+
+	public void printLastFrame() {
+		System.out.println("Action performed:");
+		for(int i=0; i<Action.all_action_max; i++) {
+			System.out.println("("+Action.to_action_type(i)+ 
+					", " + this.actions_performed.get(i).get(this.last_frame)+ ")");
+		}
 	}
 }
 

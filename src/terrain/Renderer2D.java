@@ -8,6 +8,7 @@ import java.awt.RenderingHints;
 import javax.swing.JComponent;
 
 import data.DataManagement;
+import data.Generator;
 
 public class Renderer2D extends JComponent{
 
@@ -18,6 +19,8 @@ public class Renderer2D extends JComponent{
 	private Graphics2D g2d;
 	private int width,height;
 	private Terrain terrain;
+	private int frame_count;
+	private static final int frame_checkup = 100;
 	
 	public Renderer2D(int width,int height,Terrain terrain){
 		super();
@@ -32,7 +35,6 @@ public class Renderer2D extends JComponent{
 	}
 	
 	public void paintComponent(Graphics g) {
-		
 		g2d = (Graphics2D)g;
 		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_ON);
 		cleanUp();
@@ -51,15 +53,29 @@ public class Renderer2D extends JComponent{
 
 		
 		/*Human Rendering*/
+		boolean extinction=true;
 		for(int i=0;i<DataManagement.tribes.size();i++){
 			g2d.setColor(DataManagement.tribes.get(i).getColor());
 			for(int j=0;j<DataManagement.tribes.get(i).living_humans.size();j++){
 			
 				g2d.fillOval(DataManagement.tribes.get(i).living_humans.get(j).x * caseWidth,DataManagement.tribes.get(i).living_humans.get(j).y * caseHeight, caseWidth, caseHeight);
 			}
-		}	
-
+			DataManagement.frame_data.add(DataManagement.tribes.get(i).currentFrame);
+			DataManagement.tribes.get(i).update_datas();
+			extinction &= DataManagement.tribes.get(i).getSize()== 0;
+		}
+		execution_check_up();
+		DataManagement.update_datas();
+		if(extinction) {
+			Generator.reinstanciate();
+			this.frame_count=0;
+		}
 		
 	}
-	
+	private void execution_check_up() {
+		this.frame_count++;
+		if(frame_count% frame_checkup==0) {
+			System.out.println(frame_count+" frames passed, Humans:"+DataManagement.frame_data.tribus_size +" Total food:" + DataManagement.frame_data.food);
+		}
+	}
 }

@@ -4,7 +4,7 @@ import agent.Human;
 import terrain.Case;
 
 public class Action{
-	private static final int cooperation_overflow = 5;
+	private static final int cooperation_overflow = global.Global_variables.cooperation_give_advantage;
 	private static final int cooperation_give = 100;
 	public enum Type{
 		//solo actions
@@ -72,13 +72,14 @@ public class Action{
 			interlocutor.energy -= global.Global_variables.hurt_energy_deplete;
 			break;
 		case MOVE:
+			perpetrator.move();
 			break;
 		case REPRODUCE:
-			//TODO
-			//perpetrator.reproduce(interlocutor);
+			perpetrator.reproduce(interlocutor);
 			break;
 		case SETTLEMENT:
-			
+			perpetrator.currentCase.settlement += perpetrator.ressource;
+			perpetrator.ressource =0;
 			break;
 		default:
 			break;

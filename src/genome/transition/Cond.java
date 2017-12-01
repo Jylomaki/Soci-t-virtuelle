@@ -97,10 +97,7 @@ public class Cond extends Randomized implements Mutable{
 			case IS_FIRST:
 				return agent.comStatus == Communication_Status.BEGIN;
 			case LIKE:
-				return agent.does_like_interlocutor();
-			default:
-				break;
-			
+				return agent.does_like_interlocutor();			
 			}
 		case TERRAIN_VALUE:
 			switch(this.terrain_value){
@@ -112,11 +109,9 @@ public class Cond extends Randomized implements Mutable{
 				return agent.currentCase.ressource_present();
 			case SETTLEMENT:
 				return agent.currentCase.settlement_present();
-			default:
-				break;
+			case OTHER_HUMAN:
+				return agent.currentCase.human_presence();
 			}
-		default:
-			break;
 		}
 		System.err.println("Cond: could not resolve type");
 		return false;
