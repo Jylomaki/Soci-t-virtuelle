@@ -3,6 +3,8 @@ package ui;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -18,19 +20,33 @@ import data.*;
 import global.Global_variables;
 import terrain.Renderer2D;
 
+
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.PiePlot3D;
+import org.jfree.data.general.DefaultPieDataset;
+import org.jfree.data.general.PieDataset;
+import org.jfree.util.Rotation;
+
+import action.Action;
+
 public class MainWindow extends JFrame {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 7218898975087861888L;
-	private final int WIDTH = 1200;
+	private final int WIDTH = 1440;
 	private final int HEIGHT = 720;
 	private Renderer2D renderer;
 	private boolean simulationHaveBeenRun = false;
+	ChartPanel chartPanelAllAction;
+	ChartPanel chartPanelActionSolo;
+	ChartPanel chartPanelActionInteraction;
 	
 	public MainWindow(){
-		setSize(WIDTH, HEIGHT);
+		setSize(WIDTH, HEIGHT+50);
 		setTitle("Societe Virtuelle");
 		setVisible(true);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -276,8 +292,22 @@ public class MainWindow extends JFrame {
 			
 		});
 		
-		renderer = new Renderer2D(HEIGHT,HEIGHT,DataManagement.terrain);
-		
+		renderer = new Renderer2D(WIDTH/2,WIDTH/2,DataManagement.terrain);
+		this.addComponentListener(new ComponentListener() {
+			@Override
+			public void componentHidden(ComponentEvent arg0) {}
+
+			@Override
+			public void componentMoved(ComponentEvent arg0) {}
+
+			@Override
+			public void componentResized(ComponentEvent arg0) {
+					renderer.setSize(getWidth()/2,getWidth()/2);
+			}
+
+			@Override
+			public void componentShown(ComponentEvent arg0) {}
+		});
 		JPanel panelControler = new JPanel();
 		panelControler.setLayout(new BoxLayout(panelControler,BoxLayout.Y_AXIS));
 		
@@ -395,6 +425,31 @@ public class MainWindow extends JFrame {
 		
 		add(renderer,BorderLayout.CENTER);
 		
+		
+		JPanel trackPanel = new JPanel();
+		trackPanel.setLayout(new BoxLayout(trackPanel,BoxLayout.Y_AXIS));
+		PieDataset dataset = PieChart.createDataSet(Action.all_action_max,0);
+        JFreeChart chart = PieChart.createChart(dataset, "Action Performed");
+        chartPanelAllAction = new ChartPanel(chart);
+        chartPanelAllAction.setPreferredSize(new java.awt.Dimension(500, 270));
+
+        
+		PieDataset datasetActionSolo = PieChart.createDataSet(Action.solo_action_max,0);
+        JFreeChart chartSoloAction = PieChart.createChart(datasetActionSolo, "Solo Action Performed");
+        chartPanelActionSolo = new ChartPanel(chartSoloAction);
+        chartPanelActionSolo.setPreferredSize(new java.awt.Dimension(500, 270));
+
+		PieDataset datasetActionInteraction = PieChart.createDataSet(Action.interaction_max,4);
+        JFreeChart chartSoloInteraction = PieChart.createChart(datasetActionInteraction, "Interaction Action Performed");
+        chartPanelActionInteraction = new ChartPanel(chartSoloInteraction);
+        chartPanelActionInteraction.setPreferredSize(new java.awt.Dimension(500, 270));
+        
+        trackPanel.add(chartPanelAllAction);
+        trackPanel.add(chartPanelActionSolo);
+        trackPanel.add(chartPanelActionInteraction);
+        
+        add(trackPanel,BorderLayout.EAST);
+		
 		int delay = 60;
 		ActionListener taskPerformer = new ActionListener() {
 			public void actionPerformed(ActionEvent evt) {
@@ -406,12 +461,23 @@ public class MainWindow extends JFrame {
 		Timer timer = new Timer(delay,taskPerformer);
 		timer.start();
 		renderer.repaint();
-		
+
 		
 	}
 	
 	public void loop(){
 		renderer.repaint();
+		PiePlot3D plot  = (PiePlot3D) chartPanelAllAction.getChart().getPlot();
+		plot.setDataset(PieChart.updateDataSet(DataManagement.datas.actions_performed,0));
+		chartPanelAllAction.repaint();
+		
+		PiePlot3D plot2  = (PiePlot3D) chartPanelActionSolo.getChart().getPlot();
+		plot2.setDataset(PieChart.updateDataSet(DataManagement.datas.soloaction_performed,0));
+		chartPanelActionSolo.repaint();
+		
+		PiePlot3D plot3  = (PiePlot3D) chartPanelActionInteraction.getChart().getPlot();
+		plot3.setDataset(PieChart.updateDataSet(DataManagement.datas.interaction_performed,4));
+		chartPanelActionInteraction.repaint();
 	}
 	
 }

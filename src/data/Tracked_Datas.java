@@ -48,7 +48,7 @@ public class Tracked_Datas {
 		for(int i=0; i<Action.interaction_max; i++)
 			this.interaction_performed.get(i).add(frame.interaction_performed[i]);
 		for(int i=0; i<Action.solo_action_max; i++)
-			this.soloaction_performed.get(i).add(frame.interaction_performed[i]);
+			this.soloaction_performed.get(i).add(frame.soloaction_performed[i]);
 		
 		this.nourriture.add(frame.food);
 		this.ressource.add(frame.ressource);

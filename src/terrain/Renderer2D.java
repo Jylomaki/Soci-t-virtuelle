@@ -33,6 +33,11 @@ public class Renderer2D extends JComponent{
 		yPoints = new int[3];
 	}
 	
+	public void setSize(int width,int height){
+		this.width = width;
+		this.height = height;
+	}
+	
 	private void cleanUp(){
 		g2d.setColor(Color.white);
 		g2d.fillRect(0,0,width,height);
@@ -56,10 +61,10 @@ public class Renderer2D extends JComponent{
 					xPoints[0] = i*caseWidth;
 					xPoints[1] = i*caseWidth+caseWidth/2;
 					xPoints[2] = i*caseWidth+caseWidth;
-					yPoints[0] = j*caseHeight;
-					yPoints[1] = j*caseHeight+caseWidth;
-					yPoints[2] = j*caseHeight;
-					g2d.drawPolygon(xPoints, yPoints, 3);
+					yPoints[0] = j*caseHeight+caseWidth;
+					yPoints[1] = j*caseHeight;
+					yPoints[2] = j*caseHeight+caseWidth;
+					g2d.fillPolygon(xPoints, yPoints, 3);
 				}
 			}
 		}
@@ -83,6 +88,8 @@ public class Renderer2D extends JComponent{
 			Generator.reinstanciate();
 			this.frame_count=0;
 		}
+		
+		
 		
 	}
 	private void execution_check_up() {
