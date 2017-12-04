@@ -28,6 +28,16 @@ public class XYPlotChart {
         return dataset;
 	}
 	
+	public static ArrayList<XYSeries> initSeries(int n, int offset){
+		ArrayList<XYSeries> series = new ArrayList<XYSeries>();
+		for(int i=0;i<n;i++){
+			XYSeries serie = new XYSeries(Action.to_action_type(i+offset).toString());   
+			serie.add( 0.0 , 0.0 );  
+			series.add(serie);
+		}
+		return series;
+	}
+	
 	public static XYDataset createDataSet(String serieName){
 		   XYSeriesCollection dataset = new XYSeriesCollection( );
 			
@@ -73,6 +83,26 @@ public class XYPlotChart {
 
 	
         return result;
+	}
+	
+	public static void addSeries(int data,XYSeries serie){
+		serie.add(DataManagement.datas.last_frame,data);
+	}
+	
+	
+	public static void addSeries(ArrayList<ArrayList<Integer>> datas,ArrayList<XYSeries> series){
+		for(int i=0;i<datas.size();i++)
+			series.get(i).add(DataManagement.datas.last_frame,datas.get(i).get(DataManagement.datas.last_frame));
+	}
+	
+	public static void setSerie(XYSeriesCollection dataset,XYSeries series){
+		dataset.addSeries( series );
+	}
+	
+
+	public static void setSeries(XYSeriesCollection dataset,ArrayList<XYSeries> series){
+		for(XYSeries serie:series)
+			dataset.addSeries( serie );
 	}
 	
     public static JFreeChart createChart(XYDataset dataset, String title, String xName,String yName) {
