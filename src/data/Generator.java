@@ -17,12 +17,12 @@ public class Generator extends Randomized{
 	
 	public static ArrayList<Tribe> generateTribes(){
 		ArrayList<Tribe> tribes = new ArrayList<Tribe>();
-		for(int i=0 ;i<NUMBER_TRIBE;i++){
+		for(int i=0 ;i<global.Global_variables.tribe_count;i++){
 			Tribe added = new Tribe();
 			set_tribe_attributes(added);
 			tribes.add(added);
 			
-			for(int j=0;j<MAX_TRIBE_SIZE;j++)
+			for(int j=0;j<global.Global_variables.tribe_max_size;j++)
 				generateHuman(tribes.get(i));
 		}
 		return tribes;
@@ -79,7 +79,7 @@ public class Generator extends Randomized{
 			}
 			
 			for(Tribe t: DataManagement.tribes) {
-				for(int j=0; j<MAX_TRIBE_SIZE; j++) {
+				for(int j=0; j<global.Global_variables.tribe_max_size; j++) {
 					generateHuman(t);
 				}
 			}
