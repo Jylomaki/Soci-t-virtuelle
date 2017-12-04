@@ -161,11 +161,11 @@ public class Human extends Randomized{
 			r.y=-1;
 		else
 			r.y=1;
-		System.out.println("POS: ( " + this.x + "," + this.y + ")");
+		/*System.out.println("POS: ( " + this.x + "," + this.y + ")");
 		System.out.println("DST: (" + this.dst_x + "," + this.dst_y + "(");
 		System.out.println("Deltas: direct: ( "+ dX_direct + "," + dy_direct + ")");
 		System.out.println("Deltas: reverse: ("+ dX_reverse + "," + dy_reverse +")");
-		System.out.println("R: (" + r.x + "," + r.y +")");
+		System.out.println("R: (" + r.x + "," + r.y +")");*/
 		return r;
 	}
 	
