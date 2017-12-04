@@ -6,6 +6,7 @@ import terrain.Case;
 public class Action{
 	private static final int cooperation_overflow = global.Global_variables.cooperation_give_advantage;
 	private static final int cooperation_give = 100;
+	private static final int settlement_creation_mult = 10;
 	public enum Type{
 		//solo actions
 		COLLECT_FOOD,
@@ -78,7 +79,7 @@ public class Action{
 			perpetrator.reproduce(interlocutor);
 			break;
 		case SETTLEMENT:
-			perpetrator.currentCase.settlement += perpetrator.ressource;
+			perpetrator.currentCase.settlement += perpetrator.ressource*settlement_creation_mult;
 			perpetrator.ressource =0;
 			break;
 		default:

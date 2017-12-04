@@ -86,6 +86,7 @@ public class Renderer2D extends JComponent{
 		DataManagement.update_datas();
 		if(extinction) {
 			Generator.reinstanciate();
+			DataManagement.update_datas();
 			this.frame_count=0;
 		}
 		

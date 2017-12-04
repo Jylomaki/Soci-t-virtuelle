@@ -95,6 +95,7 @@ public class Generator extends Randomized{
 		human.energy = local_random.nextInt(200) + 600;
 		human.culture = local_random.nextInt(10);
 		human.food = 1;
+		human.ressource = 5;
 		human.tribe=tribe;
 		tribe.living_humans.add(human);
 		human.currentCase = DataManagement.terrain.getCase(human.x, human.y);
