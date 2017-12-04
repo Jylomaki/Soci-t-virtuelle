@@ -55,7 +55,20 @@ public class Renderer2D extends JComponent{
 			for(int j=0;j<terrain.getHeight();j++){
 				terrain.getCase(i, j).update();
 				g2d.setColor(terrain.getCase(i, j).getColor());
-				g2d.fillRect(i*caseWidth,j*caseHeight,caseWidth,caseHeight);
+				g2d.fillRect(i*caseWidth,j*caseHeight,caseWidth,caseHeight);				
+			}
+		}
+		for(int i=0;i<terrain.getWidth();i++){
+			for(int j=0;j<terrain.getHeight();j++){
+				int Hcount = terrain.getCase(i, j).humans.size();
+				if(Hcount>0){
+					int circle_size = (int)Hcount*caseWidth;
+					g2d.setColor(terrain.getCase(i, j).humans.get(0).tribe.getColor());
+					int x=i * caseWidth-circle_size/2 + caseWidth/2;
+					int y=j * caseHeight-circle_size/2 + caseHeight/2;
+					g2d.fillOval(x,y,circle_size, circle_size);
+				}
+				//Settlement print
 				if(terrain.getCase(i, j).settlement_present()){
 					g2d.setColor(Color.WHITE);
 					xPoints[0] = i*caseWidth;
@@ -66,24 +79,21 @@ public class Renderer2D extends JComponent{
 					yPoints[2] = j*caseHeight+caseHeight;
 					g2d.fillPolygon(xPoints, yPoints, 3);
 				}
+				//Corpse print
 				if(terrain.getCase(i, j).corpse_present()){
-		
 					g2d.setColor(Color.RED);
 					g2d.drawLine(i*caseWidth, j*caseHeight, i*caseWidth+caseWidth, j*caseHeight+caseHeight);
 					g2d.drawLine(i*caseWidth, j*caseHeight+caseHeight, i*caseWidth+caseWidth, j*caseHeight);
 				}
+				
 			}
 		}
+		
 		
 		
 		/*Human Rendering*/
 		boolean extinction=true;
 		for(int i=0;i<DataManagement.tribes.size();i++){
-			g2d.setColor(DataManagement.tribes.get(i).getColor());
-			for(int j=0;j<DataManagement.tribes.get(i).living_humans.size();j++){
-			
-				g2d.fillOval(DataManagement.tribes.get(i).living_humans.get(j).x * caseWidth,DataManagement.tribes.get(i).living_humans.get(j).y * caseHeight, caseWidth, caseHeight);
-			}
 			DataManagement.frame_data.add(DataManagement.tribes.get(i).currentFrame);
 			DataManagement.tribes.get(i).update_datas();
 			extinction &= DataManagement.tribes.get(i).getSize()== 0;

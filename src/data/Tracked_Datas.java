@@ -8,6 +8,10 @@ public class Tracked_Datas {
 	public ArrayList<ArrayList<Integer>> interaction_performed;
 	public ArrayList<ArrayList<Integer>> soloaction_performed;
 	
+	public ArrayList<ArrayList<Integer>> actions_performed_per;
+	public ArrayList<ArrayList<Integer>> interaction_performed_per;
+	public ArrayList<ArrayList<Integer>> soloaction_performed_per;
+	
 	public ArrayList<Integer> ignorance_on_com;
 	
 	public ArrayList<Integer> nourriture;
@@ -21,6 +25,10 @@ public class Tracked_Datas {
 		this.actions_performed = list_of_list_cons(Action.all_action_max);
 		this.interaction_performed = list_of_list_cons(Action.interaction_max);
 		this.soloaction_performed = list_of_list_cons(Action.solo_action_max);
+		
+		this.actions_performed_per = list_of_list_cons(Action.all_action_max);
+		this.interaction_performed_per = list_of_list_cons(Action.interaction_max);
+		this.soloaction_performed_per = list_of_list_cons(Action.solo_action_max);
 		
 		this.ignorance_on_com = list_cons();
 
@@ -43,12 +51,45 @@ public class Tracked_Datas {
 	}
 	
 	public void push_back(Frame_data frame) {
-		for(int i=0; i<Action.all_action_max; i++)
+		int action_perf_sum=0;
+		int inter_perf_sum=0;
+		int solo_perf_sum=0;
+		for(int i=0; i<Action.all_action_max; i++){
 			this.actions_performed.get(i).add(frame.actions_performed[i]);
-		for(int i=0; i<Action.interaction_max; i++)
+			action_perf_sum += frame.actions_performed[i];
+		}
+		for(int i=0; i<Action.interaction_max; i++){
 			this.interaction_performed.get(i).add(frame.interaction_performed[i]);
-		for(int i=0; i<Action.solo_action_max; i++)
+			inter_perf_sum += frame.interaction_performed[i];
+		}
+		for(int i=0; i<Action.solo_action_max; i++){
 			this.soloaction_performed.get(i).add(frame.soloaction_performed[i]);
+			solo_perf_sum += frame.soloaction_performed[i];
+		}
+		
+		for(int i=0; i<Action.all_action_max; i++){
+			if(action_perf_sum !=0)
+				this.actions_performed_per.get(i).add(frame.actions_performed[i]*1000/action_perf_sum);
+			else
+				this.actions_performed_per.get(i).add(0);
+		}
+	
+		for(int i=0; i<Action.interaction_max; i++){
+			if(inter_perf_sum !=0)
+				this.interaction_performed_per.get(i).add(frame.interaction_performed[i]*1000/inter_perf_sum);
+			else
+				this.interaction_performed_per.get(i).add(0);
+
+		}
+		
+		
+		for(int i=0; i<Action.solo_action_max; i++){
+			if(solo_perf_sum!=0)
+				this.soloaction_performed_per.get(i).add(frame.soloaction_performed[i]*1000/solo_perf_sum);
+			else
+				this.soloaction_performed_per.get(i).add(0);
+		}
+		
 		
 		this.nourriture.add(frame.food);
 		this.ressource.add(frame.ressource);

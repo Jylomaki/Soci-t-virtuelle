@@ -40,12 +40,15 @@ public class MainWindow extends JFrame {
 	 */
 	private static final long serialVersionUID = 7218898975087861888L;
 	private final int WIDTH = 1440;
-	private final int HEIGHT = 720;
+	private final int HEIGHT = 800;
 	private Renderer2D renderer;
 	private boolean simulationHaveBeenRun = false;
 	ChartPanel chartPanelAllAction;
 	ChartPanel chartPanelActionSolo;
 	ChartPanel chartPanelActionInteraction;
+	ChartPanel chartPanelHumanCounter;
+	ChartPanel chartPanelFood;
+	ChartPanel chartPanelRessource;
 	
 	public MainWindow(){
 		setSize(WIDTH, HEIGHT+50);
@@ -431,25 +434,48 @@ public class MainWindow extends JFrame {
 		JPanel trackPanel = new JPanel();
 		trackPanel.setLayout(new BoxLayout(trackPanel,BoxLayout.Y_AXIS));
 		XYDataset dataset = XYPlotChart.createDataSet(Action.all_action_max,0);
-        JFreeChart chart = XYPlotChart.createChart(dataset, "Action Performed","time","percentage");
+        JFreeChart chart = XYPlotChart.createChart(dataset, "Action Performed","time","per 1000");
         chartPanelAllAction = new ChartPanel(chart);
         chartPanelAllAction.setPreferredSize(new java.awt.Dimension(500, 270));
 
         
         XYDataset datasetActionSolo = XYPlotChart.createDataSet(Action.solo_action_max,0);
-        JFreeChart chartSoloAction = XYPlotChart.createChart(datasetActionSolo, "Solo Action Performed","time","percentage");
+        JFreeChart chartSoloAction = XYPlotChart.createChart(datasetActionSolo, "Solo Action Performed","time","per 1000");
         chartPanelActionSolo = new ChartPanel(chartSoloAction);
         chartPanelActionSolo.setPreferredSize(new java.awt.Dimension(500, 270));
 
         XYDataset datasetActionInteraction = XYPlotChart.createDataSet(Action.interaction_max,4);
         
-        JFreeChart chartSoloInteraction = XYPlotChart.createChart(datasetActionInteraction, "Interaction Action Performed","time","percentage");
+        JFreeChart chartSoloInteraction = XYPlotChart.createChart(datasetActionInteraction, "Interaction Action Performed","time","per 1000");
         chartPanelActionInteraction = new ChartPanel(chartSoloInteraction);
         chartPanelActionInteraction.setPreferredSize(new java.awt.Dimension(500, 270));
+        
+        XYDataset humanCounter = XYPlotChart.createDataSet("Humans");
+        
+        JFreeChart chartHumanCounter = XYPlotChart.createChart(humanCounter, "Humans","time","quantity");
+        chartPanelHumanCounter = new ChartPanel(chartHumanCounter);
+        chartPanelHumanCounter.setPreferredSize(new java.awt.Dimension(500, 270));
+        
+        XYDataset food = XYPlotChart.createDataSet("Foods");
+        
+        JFreeChart chartFood = XYPlotChart.createChart(food, "Foods","time","quantity");
+        chartPanelFood = new ChartPanel(chartFood);
+        chartPanelFood.setPreferredSize(new java.awt.Dimension(500, 270));
+        
+        XYDataset ressource = XYPlotChart.createDataSet("Ressources");
+        
+        JFreeChart chartRessource = XYPlotChart.createChart(ressource, "Ressources","time","quantity");
+        chartPanelRessource = new ChartPanel(chartRessource);
+        chartPanelRessource.setPreferredSize(new java.awt.Dimension(500, 270));
         
         trackPanel.add(chartPanelAllAction);
         trackPanel.add(chartPanelActionSolo);
         trackPanel.add(chartPanelActionInteraction);
+        trackPanel.add(chartPanelHumanCounter);
+        trackPanel.add(chartPanelFood);
+        trackPanel.add(chartPanelRessource);
+        
+        
         
         add(trackPanel,BorderLayout.EAST);
 		
@@ -471,16 +497,28 @@ public class MainWindow extends JFrame {
 	public void loop(){
 		renderer.repaint();
 		XYPlot plot  = (XYPlot) chartPanelAllAction.getChart().getXYPlot();
-		plot.setDataset(XYPlotChart.updateDataSet(DataManagement.datas.actions_performed,0));
+		plot.setDataset(XYPlotChart.updateDataSet(DataManagement.datas.actions_performed_per,0));
 		chartPanelAllAction.repaint();
 		
 		XYPlot plot2  = (XYPlot) chartPanelActionSolo.getChart().getXYPlot();
-		plot2.setDataset(XYPlotChart.updateDataSet(DataManagement.datas.soloaction_performed,0));
+		plot2.setDataset(XYPlotChart.updateDataSet(DataManagement.datas.soloaction_performed_per,0));
 		chartPanelActionSolo.repaint();
 		
 		XYPlot plot3  = (XYPlot) chartPanelActionInteraction.getChart().getXYPlot();
-		plot3.setDataset(XYPlotChart.updateDataSet(DataManagement.datas.interaction_performed,4));
+		plot3.setDataset(XYPlotChart.updateDataSet(DataManagement.datas.interaction_performed_per,4));
 		chartPanelActionInteraction.repaint();
+		
+		XYPlot plot4  = (XYPlot) chartPanelHumanCounter.getChart().getXYPlot();
+		plot4.setDataset(XYPlotChart.updateDataSet(DataManagement.datas.tribus_size,"Humans"));
+		chartPanelHumanCounter.repaint();
+		
+		XYPlot plot5  = (XYPlot) chartPanelFood.getChart().getXYPlot();
+		plot5.setDataset(XYPlotChart.updateDataSet(DataManagement.datas.nourriture,"Foods"));
+		chartPanelFood.repaint();
+		
+		XYPlot plot6  = (XYPlot) chartPanelRessource.getChart().getXYPlot();
+		plot6.setDataset(XYPlotChart.updateDataSet(DataManagement.datas.ressource,"Ressources"));
+		chartPanelRessource.repaint();
 	}
 	
 }

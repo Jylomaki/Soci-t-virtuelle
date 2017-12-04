@@ -28,6 +28,16 @@ public class XYPlotChart {
         return dataset;
 	}
 	
+	public static XYDataset createDataSet(String serieName){
+		   XYSeriesCollection dataset = new XYSeriesCollection( );
+			
+			XYSeries series = new XYSeries(serieName);   
+			series.add( 0.0 , 0.0 );  
+			dataset.addSeries( series );
+			
+	        return dataset;
+		}
+	
 	public static XYDataset updateDataSet(ArrayList<ArrayList<Integer>> datas,int offset){
 		XYSeriesCollection result = new XYSeriesCollection();
 		
@@ -44,6 +54,24 @@ public class XYPlotChart {
 		}
 
 		
+        return result;
+	}
+	
+	public static XYDataset updateDataSet(ArrayList<Integer> datas,String serieName){
+		XYSeriesCollection result = new XYSeriesCollection();
+		
+		int j = 0;
+		XYSeries series = new XYSeries(serieName);   
+		while(j<DataManagement.datas.last_frame){
+			
+				series.add( j , datas.get(j));  
+			
+			j++;
+		}
+		result.addSeries( series );
+	
+
+	
         return result;
 	}
 	
