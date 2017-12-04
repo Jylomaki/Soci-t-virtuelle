@@ -25,8 +25,10 @@ import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PiePlot3D;
+import org.jfree.chart.plot.XYPlot;
 import org.jfree.data.general.DefaultPieDataset;
 import org.jfree.data.general.PieDataset;
+import org.jfree.data.xy.XYDataset;
 import org.jfree.util.Rotation;
 
 import action.Action;
@@ -428,19 +430,20 @@ public class MainWindow extends JFrame {
 		
 		JPanel trackPanel = new JPanel();
 		trackPanel.setLayout(new BoxLayout(trackPanel,BoxLayout.Y_AXIS));
-		PieDataset dataset = PieChart.createDataSet(Action.all_action_max,0);
-        JFreeChart chart = PieChart.createChart(dataset, "Action Performed");
+		XYDataset dataset = XYPlotChart.createDataSet(Action.all_action_max,0);
+        JFreeChart chart = XYPlotChart.createChart(dataset, "Action Performed","time","percentage");
         chartPanelAllAction = new ChartPanel(chart);
         chartPanelAllAction.setPreferredSize(new java.awt.Dimension(500, 270));
 
         
-		PieDataset datasetActionSolo = PieChart.createDataSet(Action.solo_action_max,0);
-        JFreeChart chartSoloAction = PieChart.createChart(datasetActionSolo, "Solo Action Performed");
+        XYDataset datasetActionSolo = XYPlotChart.createDataSet(Action.solo_action_max,0);
+        JFreeChart chartSoloAction = XYPlotChart.createChart(datasetActionSolo, "Solo Action Performed","time","percentage");
         chartPanelActionSolo = new ChartPanel(chartSoloAction);
         chartPanelActionSolo.setPreferredSize(new java.awt.Dimension(500, 270));
 
-		PieDataset datasetActionInteraction = PieChart.createDataSet(Action.interaction_max,4);
-        JFreeChart chartSoloInteraction = PieChart.createChart(datasetActionInteraction, "Interaction Action Performed");
+        XYDataset datasetActionInteraction = XYPlotChart.createDataSet(Action.interaction_max,4);
+        
+        JFreeChart chartSoloInteraction = XYPlotChart.createChart(datasetActionInteraction, "Interaction Action Performed","time","percentage");
         chartPanelActionInteraction = new ChartPanel(chartSoloInteraction);
         chartPanelActionInteraction.setPreferredSize(new java.awt.Dimension(500, 270));
         
@@ -467,16 +470,16 @@ public class MainWindow extends JFrame {
 	
 	public void loop(){
 		renderer.repaint();
-		PiePlot3D plot  = (PiePlot3D) chartPanelAllAction.getChart().getPlot();
-		plot.setDataset(PieChart.updateDataSet(DataManagement.datas.actions_performed,0));
+		XYPlot plot  = (XYPlot) chartPanelAllAction.getChart().getXYPlot();
+		plot.setDataset(XYPlotChart.updateDataSet(DataManagement.datas.actions_performed,0));
 		chartPanelAllAction.repaint();
 		
-		PiePlot3D plot2  = (PiePlot3D) chartPanelActionSolo.getChart().getPlot();
-		plot2.setDataset(PieChart.updateDataSet(DataManagement.datas.soloaction_performed,0));
+		XYPlot plot2  = (XYPlot) chartPanelActionSolo.getChart().getXYPlot();
+		plot2.setDataset(XYPlotChart.updateDataSet(DataManagement.datas.soloaction_performed,0));
 		chartPanelActionSolo.repaint();
 		
-		PiePlot3D plot3  = (PiePlot3D) chartPanelActionInteraction.getChart().getPlot();
-		plot3.setDataset(PieChart.updateDataSet(DataManagement.datas.interaction_performed,4));
+		XYPlot plot3  = (XYPlot) chartPanelActionInteraction.getChart().getXYPlot();
+		plot3.setDataset(XYPlotChart.updateDataSet(DataManagement.datas.interaction_performed,4));
 		chartPanelActionInteraction.repaint();
 	}
 	

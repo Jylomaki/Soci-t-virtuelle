@@ -33,7 +33,7 @@ public class Tracked_Datas {
 	
 	private static ArrayList<ArrayList<Integer>> list_of_list_cons(int sub_list_count){
 		ArrayList<ArrayList<Integer>> retour = new ArrayList<ArrayList<Integer>>();
-		for(int i=0; i<Action.Type.values().length; i++)
+		for(int i=0; i<sub_list_count; i++)
 			retour.add(new ArrayList<Integer>());
 		return retour;
 	}
