@@ -89,24 +89,12 @@ public class Action{
 	}
 	public static Human.Communication_Status correspondingStatus(Action.Type a){
 		switch(a){
-		case COLLECT_FOOD:
-			break;
-		case COLLECT_RESSOURCE:
-			break;
 		case GIVE_FOOD:
 			return Human.Communication_Status.GIVEN_FOOD;
 		case GIVE_RESSOURCE:
 			return Human.Communication_Status.GIVEN_RESSOURCE;
 		case HURT:
 			return Human.Communication_Status.HURTED;
-		case MOVE:
-			break;
-		case REPRODUCE:
-			break;
-		case SETTLEMENT:
-			break;
-		default:
-			break;
 		}
 		return Human.Communication_Status.BEGIN;
 	}

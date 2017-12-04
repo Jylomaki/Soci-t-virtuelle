@@ -61,10 +61,16 @@ public class Renderer2D extends JComponent{
 					xPoints[0] = i*caseWidth;
 					xPoints[1] = i*caseWidth+caseWidth/2;
 					xPoints[2] = i*caseWidth+caseWidth;
-					yPoints[0] = j*caseHeight+caseWidth;
+					yPoints[0] = j*caseHeight+caseHeight;
 					yPoints[1] = j*caseHeight;
-					yPoints[2] = j*caseHeight+caseWidth;
+					yPoints[2] = j*caseHeight+caseHeight;
 					g2d.fillPolygon(xPoints, yPoints, 3);
+				}
+				if(terrain.getCase(i, j).corpse_present()){
+		
+					g2d.setColor(Color.RED);
+					g2d.drawLine(i*caseWidth, j*caseHeight, i*caseWidth+caseWidth, j*caseHeight+caseHeight);
+					g2d.drawLine(i*caseWidth, j*caseHeight+caseHeight, i*caseWidth+caseWidth, j*caseHeight);
 				}
 			}
 		}

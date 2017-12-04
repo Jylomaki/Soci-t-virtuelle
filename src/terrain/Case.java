@@ -243,8 +243,8 @@ public class Case {
 
 	public void update_corpse_presence(){
 		if(this.corpse_presence){
-			this.corpse_food = Math.min(this.corpse_food-global.Global_variables.corpse_decay_rate, 0);
-			this.corpse_ressource = Math.min(this.corpse_ressource-global.Global_variables.corpse_decay_rate, 0);
+			this.corpse_food = Math.max(this.corpse_food-global.Global_variables.corpse_decay_rate, 0);
+			this.corpse_ressource = Math.max(this.corpse_ressource-global.Global_variables.corpse_decay_rate, 0);
 		}
 		this.corpse_presence = this.corpse_food>0 || this.corpse_ressource>0;
 	}
