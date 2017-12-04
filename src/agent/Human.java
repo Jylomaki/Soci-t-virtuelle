@@ -125,8 +125,12 @@ public class Human extends Randomized{
 		//System.out.println("Human moving: new pos: (" + this.x +", "+ this.y +")" );
 		if(x<0)
 			x = DataManagement.TerrainGridX-1;
+		else if(x == DataManagement.TerrainGridX)
+			x=0;
 		if(y<0)
 			y = DataManagement.TerrainGridY-1;
+		else if(y == DataManagement.TerrainGridX)
+			y=0;
 		this.currentCase = DataManagement.terrain.getCase(x, y);
 		this.currentCase.humans.add(this);
 		if(random)
