@@ -45,8 +45,8 @@ public class MainWindow extends JFrame {
 	 * 
 	 */
 	private static final long serialVersionUID = 7218898975087861888L;
-	private final int WIDTH = 1440;
-	private final int HEIGHT = 800;
+	private final int WIDTH = 1200;
+	private final int HEIGHT = 600;
 	private Renderer2D renderer;
 	private boolean simulationHaveBeenRun = false;
 	private ChartPanel chartPanelAllAction;
@@ -523,13 +523,15 @@ public class MainWindow extends JFrame {
 	public void loop(){
 		
 		renderer.repaint();
-		XYPlotChart.addSeries(DataManagement.datas.actions_performed_per, seriesActionsPerfomed);
-		XYPlotChart.addSeries(DataManagement.datas.soloaction_performed_per, seriesSoloActionsPerfomed);
-		XYPlotChart.addSeries(DataManagement.datas.interaction_performed_per, seriesInteractionsActionsPerfomed);
-
-		XYPlotChart.addSeries(DataManagement.datas.tribus_size.get(DataManagement.datas.last_frame), serieHumans);
-		XYPlotChart.addSeries(DataManagement.datas.nourriture.get(DataManagement.datas.last_frame), serieFood);
-		XYPlotChart.addSeries(DataManagement.datas.ressource.get(DataManagement.datas.last_frame), serieRessource);
+		if((renderer.frame_count%global.Global_variables.refreshRate) == 0){
+			XYPlotChart.addSeries(DataManagement.datas.actions_performed_per, seriesActionsPerfomed);
+			XYPlotChart.addSeries(DataManagement.datas.soloaction_performed_per, seriesSoloActionsPerfomed);
+			XYPlotChart.addSeries(DataManagement.datas.interaction_performed_per, seriesInteractionsActionsPerfomed);
+	
+			XYPlotChart.addSeries(DataManagement.datas.tribus_size.get(DataManagement.datas.last_frame), serieHumans);
+			XYPlotChart.addSeries(DataManagement.datas.nourriture.get(DataManagement.datas.last_frame), serieFood);
+			XYPlotChart.addSeries(DataManagement.datas.ressource.get(DataManagement.datas.last_frame), serieRessource);
+		}
 	}
 	
 }
