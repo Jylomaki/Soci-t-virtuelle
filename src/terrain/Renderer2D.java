@@ -19,7 +19,7 @@ public class Renderer2D extends JComponent{
 	private Graphics2D g2d;
 	private int width,height;
 	private Terrain terrain;
-	private int frame_count;
+	public int frame_count;
 	private static final int frame_checkup = 100;
 	int xPoints[];
 	int yPoints[];
@@ -93,12 +93,14 @@ public class Renderer2D extends JComponent{
 		
 		/*Human Rendering*/
 		boolean extinction=true;
+		execution_check_up();
 		for(int i=0;i<DataManagement.tribes.size();i++){
-			DataManagement.frame_data.add(DataManagement.tribes.get(i).currentFrame);
-			DataManagement.tribes.get(i).update_datas();
+			if((frame_count% global.Global_variables.refreshRate) == 0 ){
+				DataManagement.frame_data.add(DataManagement.tribes.get(i).currentFrame);
+				DataManagement.tribes.get(i).update_datas();
+			}
 			extinction &= DataManagement.tribes.get(i).getSize()== 0;
 		}
-		execution_check_up();
 		DataManagement.update_datas();
 		if(extinction) {
 			Generator.reinstanciate();

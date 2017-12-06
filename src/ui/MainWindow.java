@@ -523,13 +523,13 @@ public class MainWindow extends JFrame {
 	public void loop(){
 		
 		renderer.repaint();
-		XYPlotChart.addSeries(DataManagement.datas.actions_performed_per, seriesActionsPerfomed);
-		XYPlotChart.addSeries(DataManagement.datas.soloaction_performed_per, seriesSoloActionsPerfomed);
-		XYPlotChart.addSeries(DataManagement.datas.interaction_performed_per, seriesInteractionsActionsPerfomed);
+		XYPlotChart.updateSeries(DataManagement.datas.actions_performed_per, seriesActionsPerfomed);
+		XYPlotChart.updateSeries(DataManagement.datas.soloaction_performed_per, seriesSoloActionsPerfomed);
+		XYPlotChart.updateSeries(DataManagement.datas.interaction_performed_per, seriesInteractionsActionsPerfomed);
 
-		XYPlotChart.addSeries(DataManagement.datas.tribus_size.get(DataManagement.datas.last_frame), serieHumans);
-		XYPlotChart.addSeries(DataManagement.datas.nourriture.get(DataManagement.datas.last_frame), serieFood);
-		XYPlotChart.addSeries(DataManagement.datas.ressource.get(DataManagement.datas.last_frame), serieRessource);
+		XYPlotChart.updateSeries(DataManagement.datas.tribus_size.get(DataManagement.datas.last_frame), serieHumans);
+		XYPlotChart.updateSeries(DataManagement.datas.nourriture.get(DataManagement.datas.last_frame), serieFood);
+		XYPlotChart.updateSeries(DataManagement.datas.ressource.get(DataManagement.datas.last_frame), serieRessource);
 	}
 	
 }

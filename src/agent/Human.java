@@ -82,7 +82,7 @@ public class Human extends Randomized{
 		
 		offspring.currentCase = this.currentCase;
 		currentCase.humans.add(offspring);
-		this.tribe.mutate_autos();
+		//this.tribe.mutate_autos();
 		return offspring;
 	}
 	

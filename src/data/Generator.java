@@ -63,8 +63,9 @@ public class Generator extends Randomized{
 				Tribe t = DataManagement.tribes.get(i);
 				if(t.getFitness_score() >= median_fitness) {
 					t.mutate_autos();
-					if(t.getFitness_score() >= quartile_fitness) {
+					if(true) {
 						Tribe nouv = t.clone();
+						nouv.mutate_autos();
 						set_tribe_attributes(nouv);
 						DataManagement.tribes.add(nouv);
 					}

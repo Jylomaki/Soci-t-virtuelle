@@ -50,4 +50,5 @@ public class Global_variables {
 	
 	public static int lastBestFitness;
 	public static int lastMedianFitness;
+	public static int refreshRate=10;
 }
