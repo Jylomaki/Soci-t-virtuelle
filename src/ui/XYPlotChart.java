@@ -85,12 +85,12 @@ public class XYPlotChart {
         return result;
 	}
 	
-	public static void addSeries(int data,XYSeries serie){
+	public static void updateSerie(int data,XYSeries serie){
 		serie.add(DataManagement.datas.last_frame,data);
 	}
 	
 	
-	public static void addSeries(ArrayList<ArrayList<Integer>> datas,ArrayList<XYSeries> series){
+	public static void updateSeries(ArrayList<ArrayList<Integer>> datas,ArrayList<XYSeries> series){
 		for(int i=0;i<datas.size();i++)
 			series.get(i).add(DataManagement.datas.last_frame,datas.get(i).get(DataManagement.datas.last_frame));
 	}

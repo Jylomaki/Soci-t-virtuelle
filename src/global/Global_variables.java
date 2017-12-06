@@ -47,4 +47,7 @@ public class Global_variables {
 	public static int percentageFood=10;
 	public static int percentageRessource=5;
 	public static int percentageBoth=5;
+	
+	public static int lastBestFitness;
+	public static int lastMedianFitness;
 }

@@ -19,6 +19,7 @@ public class Tracked_Datas {
 	public ArrayList<Integer> craft_and_settlement;
 	public ArrayList<Integer> tribus_size;
 	
+	
 	public int last_frame=-1;
 	
 	public Tracked_Datas() {
