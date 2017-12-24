@@ -25,17 +25,11 @@ import terrain.Renderer2D;
 
 
 
-import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
-import org.jfree.chart.plot.PiePlot3D;
-import org.jfree.chart.plot.XYPlot;
-import org.jfree.data.general.DefaultPieDataset;
-import org.jfree.data.general.PieDataset;
 import org.jfree.data.xy.XYDataset;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
-import org.jfree.util.Rotation;
 
 import action.Action;
 
@@ -55,6 +49,7 @@ public class MainWindow extends JFrame {
 	private ChartPanel chartPanelHumanCounter;
 	private ChartPanel chartPanelFood;
 	private ChartPanel chartPanelRessource;
+	private ChartPanel chartPanelFitness;
 	
 	private ArrayList<XYSeries> seriesActionsPerfomed;
 	private ArrayList<XYSeries> seriesSoloActionsPerfomed;
@@ -63,6 +58,9 @@ public class MainWindow extends JFrame {
 	private XYSeries serieHumans;
 	private XYSeries serieFood;
 	private XYSeries serieRessource;
+	private XYSeries serieFitnessMax;
+	private XYSeries serieFitnessMedian;
+	private XYSeries serieFitnessLow;
 	
 	public MainWindow(){
 		setSize(WIDTH, HEIGHT+50);
@@ -494,12 +492,31 @@ public class MainWindow extends JFrame {
         chartPanelRessource = new ChartPanel(chartRessource);
         chartPanelRessource.setPreferredSize(new java.awt.Dimension(500, 270));
         
+        serieFitnessMax = new XYSeries("Fitness_Max");
+        XYDataset fitness =  new XYSeriesCollection( );
+        XYPlotChart.setSerie((XYSeriesCollection) fitness, serieFitnessMax);
+        
+        serieFitnessMedian = new XYSeries("Fitness_Median");
+        XYPlotChart.setSerie((XYSeriesCollection) fitness, serieFitnessMedian);
+        
+        serieFitnessLow = new XYSeries("Fitness_Lower");
+        XYPlotChart.setSerie((XYSeriesCollection) fitness, serieFitnessLow);
+        
+        JFreeChart chartFitness = XYPlotChart.createChart(fitness, "Fitness","extinction","Score");
+        chartPanelFitness = new ChartPanel(chartFitness);
+        chartPanelFitness.setPreferredSize(new java.awt.Dimension(500, 270));
+        XYPlotChart.updateSeries(0, serieFitnessMax,0);
+        XYPlotChart.updateSeries(0, serieFitnessMedian,0);
+        XYPlotChart.updateSeries(0, serieFitnessLow,0);
+        
+        
         trackPanel.add(chartPanelAllAction);
         trackPanel.add(chartPanelActionSolo);
         trackPanel.add(chartPanelActionInteraction);
         trackPanel.add(chartPanelHumanCounter);
         trackPanel.add(chartPanelFood);
         trackPanel.add(chartPanelRessource);
+        trackPanel.add(chartPanelFitness);
         
         
         
@@ -529,9 +546,15 @@ public class MainWindow extends JFrame {
 			XYPlotChart.updateSeries(DataManagement.datas.soloaction_performed_per, seriesSoloActionsPerfomed);
 			XYPlotChart.updateSeries(DataManagement.datas.interaction_performed_per, seriesInteractionsActionsPerfomed);
 	
-			XYPlotChart.updateSeries(DataManagement.datas.tribus_size.get(DataManagement.datas.last_frame), serieHumans);
-			XYPlotChart.updateSeries(DataManagement.datas.nourriture.get(DataManagement.datas.last_frame), serieFood);
-			XYPlotChart.updateSeries(DataManagement.datas.ressource.get(DataManagement.datas.last_frame), serieRessource);
+			XYPlotChart.updateSeries(DataManagement.datas.tribus_size.get(DataManagement.datas.last_frame), serieHumans,DataManagement.datas.last_frame);
+			XYPlotChart.updateSeries(DataManagement.datas.nourriture.get(DataManagement.datas.last_frame), serieFood,DataManagement.datas.last_frame);
+			XYPlotChart.updateSeries(DataManagement.datas.ressource.get(DataManagement.datas.last_frame), serieRessource,DataManagement.datas.last_frame);
+
+		}
+		if(DataManagement.drawFitness){
+			XYPlotChart.updateSeries(DataManagement.fitnessMax, serieFitnessMax,DataManagement.reinstanciation);
+			XYPlotChart.updateSeries(DataManagement.fitnessMedian, serieFitnessMedian,DataManagement.reinstanciation);
+			XYPlotChart.updateSeries(DataManagement.fitnessLow, serieFitnessLow,DataManagement.reinstanciation);
 		}
 	}
 	

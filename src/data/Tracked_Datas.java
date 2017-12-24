@@ -18,6 +18,7 @@ public class Tracked_Datas {
 	public ArrayList<Integer> ressource;
 	public ArrayList<Integer> craft_and_settlement;
 	public ArrayList<Integer> tribus_size;
+	public ArrayList<Integer> fitness_score;
 	
 	
 	public int last_frame=-1;
@@ -37,6 +38,7 @@ public class Tracked_Datas {
 		this.ressource = list_cons();
 		this.craft_and_settlement = list_cons();
 		this.tribus_size = list_cons();
+		this.fitness_score = list_cons();
 
 	}
 	
@@ -95,6 +97,7 @@ public class Tracked_Datas {
 		this.nourriture.add(frame.food);
 		this.ressource.add(frame.ressource);
 		this.tribus_size.add(frame.tribus_size);
+		this.fitness_score.add(frame.fitness_score);
 		this.craft_and_settlement.add(frame.craft_and_settlement);
 		this.ignorance_on_com.add(frame.ignorance_on_com);
 		this.last_frame++;

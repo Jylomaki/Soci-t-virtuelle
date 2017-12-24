@@ -12,7 +12,8 @@ public class Frame_data {
 	public int food;
 	public int ressource;
 	public int craft_and_settlement;
-	public int tribus_size;
+	public int tribus_size = 0;
+	public int fitness_score;
 	
 	public Frame_data(){
 		this.actions_performed = new int[Action.all_action_max];

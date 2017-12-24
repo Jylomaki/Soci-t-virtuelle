@@ -85,9 +85,11 @@ public class Tribe extends Randomized {
 	
 	
 	public void update_datas() {
+		this.update_fitness();
+		this.currentFrame.fitness_score = fitness_score;
 		this.tracked_datas.push_back(this.currentFrame);
 		this.currentFrame.reset();
-		this.update_fitness();
+		
 	}
 
 	public int getSize() {

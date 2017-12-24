@@ -85,8 +85,8 @@ public class XYPlotChart {
         return result;
 	}
 	
-	public static void updateSeries(int data,XYSeries serie){
-		serie.add(DataManagement.datas.last_frame,data);
+	public static void updateSeries(int data,XYSeries serie,int i){
+		serie.add(i,data);
 	}
 	
 	

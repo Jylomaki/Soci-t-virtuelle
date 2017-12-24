@@ -1,5 +1,6 @@
 package data;
 import java.util.ArrayList;
+import java.util.Collections;
 
 import agent.Human;
 import agent.Tribe;
@@ -15,7 +16,12 @@ public class DataManagement {
 	public static Terrain terrain = new Terrain();
 	public static ArrayList<Tribe> tribes = new ArrayList<Tribe>();
 	public static Frame_data frame_data = new Frame_data();
+	public static int fitnessMax=0;
+	public static int fitnessMedian=0;
+	public static int fitnessLow=0;
+	public static int reinstanciation = -1;
 	public static Tracked_Datas datas= new Tracked_Datas();
+	public static boolean drawFitness = true;
 	
 	public static void killHuman(Human human){
 		for(Tribe tribe:tribes){
@@ -31,6 +37,23 @@ public class DataManagement {
 	public static void update_datas() {
 		datas.push_back(frame_data);
 		frame_data.reset();
+	}
+	
+	public static void update_datas_extinction(){
+		reinstanciation++;
+
+		ArrayList<Integer> fitness = new ArrayList<Integer>();
+		for(Tribe t: tribes) {
+			fitness.add(t.getFitness_score());
+			t.setFitness_score(1);
+		}
+		Collections.sort(fitness);
+		if(!fitness.isEmpty()){
+			fitnessLow = fitness.get(0);
+			fitnessMedian = fitness.get(DataManagement.tribes.size()/2);
+			fitnessMax = fitness.get(DataManagement.tribes.size()-1);
+		}
+
 	}
 	
 }
