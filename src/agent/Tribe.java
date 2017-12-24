@@ -51,6 +51,7 @@ public class Tribe extends Randomized {
 		do{
 			this.cA_S2 = new Behaviour_Automata(true);
 		}while(!this.A_S1.is_Valid());
+		this.fitness_score = 0;
 		this.tracked_datas = new Tracked_Datas();
 		this.currentFrame = new Frame_data();
 	}

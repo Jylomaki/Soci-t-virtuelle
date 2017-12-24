@@ -48,7 +48,6 @@ public class Generator extends Randomized{
 			ArrayList<Integer> fitness = new ArrayList<Integer>();
 			for(Tribe t: DataManagement.tribes) {
 				fitness.add(t.getFitness_score());
-				t.setFitness_score(1);
 			}
 			Collections.sort(fitness);
 			System.out.println("Render: Extinction detected, beginning reinstanciation. Generation:" + generation++);
@@ -56,6 +55,7 @@ public class Generator extends Randomized{
 			DataManagement.datas.printLastFrame();
 			int median_fitness = fitness.get(DataManagement.tribes.size()/2);
 			int quartile_fitness = fitness.get(DataManagement.tribes.size()*3/4);
+			System.out.println("Median:" + median_fitness + " 3/4 quartile:" + quartile_fitness + " Best:" + fitness.get(fitness.size()-1));
 			
 			int i=0;
 			int initial_size = DataManagement.tribes.size();
@@ -72,13 +72,15 @@ public class Generator extends Randomized{
 					i++;
 				}
 				else {
-					DataManagement.tribes.remove(i);
+					DataManagement.tribes.remove(i);/*
 					Tribe add= generateTribe();
-					DataManagement.tribes.add(add);
+					DataManagement.tribes.add(add);*/
 					initial_size--;
 				}
 			}
-			
+			for(Tribe t: DataManagement.tribes) {
+				t.setFitness_score(0);
+			}
 			for(Tribe t: DataManagement.tribes) {
 				for(int j=0; j<global.Global_variables.tribe_max_size; j++) {
 					generateHuman(t);

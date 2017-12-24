@@ -115,7 +115,7 @@ public class Renderer2D extends JComponent{
 	}
 	private void execution_check_up() {
 		this.frame_count++;
-		if(frame_count% frame_checkup==0) {
+		if((frame_count+1)% frame_checkup==0) {
 			System.out.println(frame_count+" frames passed, Humans:"+DataManagement.frame_data.tribus_size +" Total food:" + DataManagement.frame_data.food);
 		}
 	}

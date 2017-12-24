@@ -45,7 +45,6 @@ public class DataManagement {
 		ArrayList<Integer> fitness = new ArrayList<Integer>();
 		for(Tribe t: tribes) {
 			fitness.add(t.getFitness_score());
-			t.setFitness_score(1);
 		}
 		Collections.sort(fitness);
 		if(!fitness.isEmpty()){

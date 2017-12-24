@@ -17,7 +17,7 @@ public class Human extends Randomized{
 	static final int ENERGY_RESTITUTION = 200;
 	static final int FOOD_EAT = 1;
 	static final int adult_age = 1000;
-	static final int birth_energy = 200;
+	public static final int birth_energy = 200;
 	static final int settlement_energy_loss_advantage = 15;
 
 	

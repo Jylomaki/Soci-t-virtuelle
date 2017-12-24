@@ -505,9 +505,9 @@ public class MainWindow extends JFrame {
         JFreeChart chartFitness = XYPlotChart.createChart(fitness, "Fitness","extinction","Score");
         chartPanelFitness = new ChartPanel(chartFitness);
         chartPanelFitness.setPreferredSize(new java.awt.Dimension(500, 270));
-        XYPlotChart.updateSeries(0, serieFitnessMax,0);
+        /*XYPlotChart.updateSeries(0, serieFitnessMax,0);
         XYPlotChart.updateSeries(0, serieFitnessMedian,0);
-        XYPlotChart.updateSeries(0, serieFitnessLow,0);
+        XYPlotChart.updateSeries(0, serieFitnessLow,0);*/
         
         
         trackPanel.add(chartPanelAllAction);
