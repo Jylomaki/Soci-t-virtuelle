@@ -96,6 +96,7 @@ public class Human extends Randomized{
 	
 	private void energy_update(){
 		//System.out.println(energy);
+		this.dieCheck();
 		if(this.currentCase.settlement_present())
 			energy += settlement_energy_loss_advantage;
 		energy -= (age/100);
@@ -103,11 +104,16 @@ public class Human extends Randomized{
 			food-= FOOD_EAT;
 			energy += ENERGY_RESTITUTION;
 		}
+		this.dieCheck();
+	}
+	
+	private void dieCheck() {
 		if(energy<=0){//DIE
 			DataManagement.killHuman(this);
 			this.currentCase.humans.remove(this);
 			if(this.food > 0)
 				DataManagement.terrain.getCase(x, y).corpse_food += this.food;
+			this.food=0;
 			if(this.ressource > 0)
 				DataManagement.terrain.getCase(x, y).corpse_ressource += this.ressource;
 			this.tribe.living_humans.remove(this);
